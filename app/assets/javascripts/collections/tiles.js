@@ -10,10 +10,10 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
   },
     getMore: function(subrs, callback){
     var that = this;
-    var subs = subrs.join('+');
- console.log("http://www.reddit.com/r/"+subs+".json?limit=15&after="+this.lastTile+"&jsonp=?")
+    // var subs = subrs.join('+');
+ console.log("http://www.reddit.com/r/"+subrs+".json?limit=15&after="+this.lastTile+"&jsonp=?")
     $.getJSON(
- "http://www.reddit.com/r/"+subs+".json?limit=15&after="+this.lastTile+"&jsonp=?", function (data){
+ "http://www.reddit.com/r/"+subrs+".json?limit=15&after="+this.lastTile+"&jsonp=?", function (data){
         var newTiles = [];
         $.each(
           data.data.children.slice(0, 25),

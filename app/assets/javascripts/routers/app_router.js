@@ -6,7 +6,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.feeds = {};
   },
   routes: {
-    "": "visitInitialWall",
+    "": "visitDefaultWall",
     "r/:sub": "visitSubWall",
     "f/:feed": "visitFeed",
     "newUser": "signUp",
@@ -14,8 +14,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     "destroySession": "signOut",
     "editSettings": "editSettings"
   },
-  visitInitialWall: function(){
-    Wreddit.router.navigate('#r/all', {trigger:true});
+  visitDefaultWall: function(){
+    Wreddit.router.navigate('#r/aww', {trigger:true});
   },
   visitSubWall: function(subName){
     if(!this.subs[subName]){
@@ -23,6 +23,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this.subs[subName].view.render();
     }
     this._swapWall(this.subs[subName]);
+    this._refreshSession();
   },
   visitFeed: function(feedName){
     if(!this.feeds[feedName]){
@@ -30,58 +31,65 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this.feeds[feedName].view.render();
     }
     this._swapWall(this.feeds[feedName]);
+    this._refreshSession();
   },
   signUp: function () {
     this.newUserView = new Wreddit.Views.SignUp({})
-
-
     this._swapView(this.newUserView);
     this.newUserView.render();
   },
   signIn: function () {
     this.newSessionView = new Wreddit.Views.SignIn({})
-
-
     this._swapView(this.newSessionView);
     this.newSessionView.render();
   },
   signOut: function () {
     document.cookie =
-    "sessionToken=bleh; expires=Thu, 18 Dec 2000 12:00:00 GMT; path=/";
-    this._refreshSession();
+    "sessionToken=a; expires=Thu, 18 Dec 2000 12:00:00 GMT; path=/";
+    this.currentUser = new Wreddit.Models.User();
+    this._refreshNavBar(this.currentUser);
+    $('#allWall-links').html('')
+    $('#allFeed-links').html('')
+
   },
   editSettings: function () {
 
   },
 
-
   _refreshSession: function (){
     var that = this;
-    that.currentUser = new Wreddit.Models.User()
-    Wreddit.Models.User.currentUser(document.cookie, function(resp){
-      console.log(resp)
-      if(resp.user){
-        that.currentUser = new Wreddit.Models.User(resp.user)
-        console.log(that.currentUser)
+    if(!that.currentUser){
+      that.currentUser = new Wreddit.Models.User()
+    }
+    Wreddit.Models.User.currentUser(document.cookie, function(user){
+      if(user.id){
+        that.currentUser = new Wreddit.Models.User(user)
       }
       that._refreshNavBar(that.currentUser);
     })
   },
-
-
-
-
   _refreshNavBar: function (user){
+    // this._refreshSearchBars();
+    this._refreshUsers();
     if(user.id){
-      console.log("refreshing", user)
       $('#current_user_in_nav_bar').html(user.username);
       $('#main-nav-dropdown').html('<li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li>');
     }else{
-      console.log("refreshing nil user")
       $('#current_user_in_nav_bar').html("Account");
       $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li>');
     }
   },
+  _refreshUsers: function (){
+    var that = this;
+    this.users = new Wreddit.Collections.Users();
+    this.users.fetch({
+      success: function(){
+      },
+      error: function(){
+      }
+    });
+  },
+
   _createWall: function (wallName, type) {
     if (type === 'sub'){
       var $parentOfLinkToWall = $('#allWall-links')
@@ -165,6 +173,43 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$rootEl.hide();
     this.$minorEl.html(view.$el);
   },
+    //COPYPASTA
+  _refreshSearchBars: function (){
+    var matcher = function(strs) {
+      return function findMatches(q, cb) {
+        var matches, substringRegex;
 
+        // an array that will be populated with substring matches
+        matches = [];
 
+        // regex used to determine if a string contains the substring `q`
+        substrRegex = new RegExp(q, 'i');
+
+        // iterate through the pool of strings and for any string that
+        // contains the substring `q`, add it to the `matches` array
+        $.each(strs, function(i, str) {
+          if (substrRegex.test(str)) {
+            // the typeahead jQuery plugin expects suggestions to a
+            // JavaScript object, refer to typeahead docs for more info
+            matches.push({ value: str });
+          }
+        });
+
+        cb(matches);
+      };
+    };
+
+    var users = ['david', 'dawu', 'premium']
+
+    $('#subreddit-field').typeahead({
+      minLength: 1,
+      highlight: true,
+      hint: true,
+    },
+    {
+      name: 'users',
+      displayKey: 'value',
+      source: matcher(users)
+    })
+  },
 })

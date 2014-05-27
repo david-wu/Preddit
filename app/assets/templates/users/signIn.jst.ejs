@@ -6,7 +6,7 @@
 
 
 
-      <form role="form">
+      <form id="form-to-sign-in" role="form">
         <div class="form-group">
           <label for="username-field">Username</label>
           <input name='user[username]' type="text" class="form-control" id="username-field" placeholder="Username">
@@ -22,7 +22,7 @@
   </div>
 </div>
 <script>
-$('form').keypress( function( e ) {
+$('form#form-to-sign-in').keypress( function( e ) {
   var code = e.keyCode || e.which;
 
   if( code === 13 ) {

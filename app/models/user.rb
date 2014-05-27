@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
     include BCrypt
     validates :username, :password_digest, presence: true
+    validates :username, uniqueness: true
     before_create :ensure_session_token
 
     def password
@@ -25,5 +26,6 @@ class User < ActiveRecord::Base
 
     def reset_token()
       self.session_token = SecureRandom.urlsafe_base64(16)
+      self.save!
     end
 end

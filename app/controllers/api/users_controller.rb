@@ -1,8 +1,12 @@
 class Api::UsersController < ApplicationController
 
+  def index
+    @users = User.all
+    render json: @users
+  end
+
   def create
     @user = User.new(user_params)
-    p user_params
     if @user.save
       render json: { token: @user.session_token, user: @user}
     else
@@ -16,9 +20,8 @@ class Api::UsersController < ApplicationController
 
   def current
     @user = User.find_by(session_token: params['sessionToken'])
-    p @user
     if @user
-      render json: { token: @user.session_token, user: @user}
+      render json: @user
     else
       render json: { errors: @user.errors.full_messages }, status: 422
     end

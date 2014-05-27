@@ -15,7 +15,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     this.loading = true;
     var that = this;
     if(this.type === 'sub'){
-      this.collection.getMore(this.wallName.split(' '),
+      this.collection.getMore(this.wallName,
         function(newTiles){
           that.loading = false;
           for(var $i = 0; $i < newTiles.length; $i++){

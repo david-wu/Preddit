@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-xs-4">
 
-      <form role="form">
+      <form id='form-to-sign-up' role="form">
         <!-- <div class="form-group">
           <label for="email-field">Email</label>
           <input name='user[email]' type="text" class="form-control" id="email-field" placeholder="Email">
@@ -36,3 +36,13 @@
     </div>
   </div>
 </div>
+<script>
+$('form#form-to-sign-up').keypress( function( e ) {
+  var code = e.keyCode || e.which;
+
+  if( code === 13 ) {
+    $('#sign-up-btn').click();
+    return false;
+  }
+})
+</script>

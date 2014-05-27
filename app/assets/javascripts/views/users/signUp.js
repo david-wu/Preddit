@@ -25,10 +25,10 @@ Wreddit.Views.SignUp = Backbone.View.extend({
     currentUser.save([],{
       success: function(model, response){
         Wreddit.router.session_token = response.token;
-        Wreddit.router.navigate('#f/'+attrs.user.username, {trigger: true})
         document.cookie =
         "sessionToken="+response.token+"; expires=Thu, 18 Dec 3000 12:00:00 GMT; path=/";
         Wreddit.router._refreshNavBar(response.user);
+        Wreddit.router.navigate('#f/'+attrs.user.username, {trigger: true})
       },
       error: function(model, response){
         _.each(response.responseJSON.errors, function(error){

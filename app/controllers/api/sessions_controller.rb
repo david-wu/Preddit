@@ -1,10 +1,9 @@
 class Api::SessionsController < ApplicationController
   def create
     @user = User.find_by!(user_params)
-    p params["user"]["password"]
     if @user.is_password?(params["user"]["password"])
       @user.reset_token()
-      render json: { token: @user.session_token, user: @user}
+      render json: @user
     else
       render json: { errors: @user.errors.full_messages }, status: 422
     end

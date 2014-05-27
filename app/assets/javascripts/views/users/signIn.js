@@ -1,6 +1,6 @@
 Wreddit.Views.SignIn = Backbone.View.extend({
   events: {
-    'click #sign-in-btn': 'signIn'
+    'click #sign-in-btn': 'clickedSignIn'
   },
   template: JST['users/signIn'],
   render: function () {
@@ -10,7 +10,7 @@ Wreddit.Views.SignIn = Backbone.View.extend({
     this.$el.html(renderedContent);
     return this;
   },
-  signIn: function (event){
+  clickedSignIn: function (event){
     event.preventDefault();
     var attrs = $(event.target.form).serializeJSON();
     attrs.authenticity_token = $('head').attr('authenticity_token')
@@ -18,12 +18,15 @@ Wreddit.Views.SignIn = Backbone.View.extend({
 
     var currentUser = new Wreddit.Models.User(attrs);
     currentUser.signIn(function(response){
-      if(response.token){
-        Wreddit.router.session_token = response.token;
-        Wreddit.router.navigate('#f/'+attrs.user.username, {trigger: true})
+                            console.log(response)
+
+      if(response.session_token){
+
+        Wreddit.router.session_token = response.session_token;
         document.cookie =
-        "sessionToken="+response.token+"; expires=Thu, 18 Dec 3000 12:00:00 GMT; path=/";
-        Wreddit.router._refreshNavBar(response.user);
+        "sessionToken="+response.session_token+"; expires=Thu, 18 Dec 3000 12:00:00 GMT; path=/";
+        Wreddit.router._refreshNavBar(response);
+        Wreddit.router.navigate('#f/'+response.username, {trigger: true})
       }else{
         console.log("fail!!")
 $('#sign-in-form-errors').html(' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><div class="alert alert-danger alert-dismissable">Incorect Login</div>')

@@ -21,10 +21,10 @@ Wreddit.Models.User = Backbone.Model.extend({
   //   })
   // }
 })
-Wreddit.Models.User.currentUser = function (token, callback){
+Wreddit.Models.User.currentUser = function (cookie, callback){
   $.ajax({
     type: "POST",
-    data: token,
+    data: cookie,
     url: "api/users/current",
     dataType: "json",
     success: callback.bind(this),
