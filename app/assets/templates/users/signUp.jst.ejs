@@ -3,10 +3,10 @@
     <div class="col-xs-4">
 
       <form role="form">
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="email-field">Email</label>
           <input name='user[email]' type="text" class="form-control" id="email-field" placeholder="Email">
-        </div>
+        </div> -->
 
         <div class="form-group">
           <label for="username-field">Username</label>
@@ -29,9 +29,9 @@
             <input name='user[permissions][]' type="checkbox" value="NSFW">
           </label> nsfw<br>
 
-        <button id='sign-up-btn' type="submit" class="btn btn-default">Sign up</button>
-      </form>
-
+        <button id='sign-up-btn' class="btn btn-default">Sign up</button>
+      </form><br>
+      <div id="sign-up-form-errors"></div>
     </div>
   </div>
 </div>
