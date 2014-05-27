@@ -1,6 +1,10 @@
+
+
 <div class="container">
   <div class="row">
     <div class="col-xs-4">
+
+
 
       <form role="form">
         <div class="form-group">
@@ -11,9 +15,19 @@
           <label for="exampleInputPassword1">Password</label>
           <input name='user[password]' type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
         </div>
-        <button id='sign-in-btn' class="btn btn-default">Sign In</button>
+        <button id='sign-in-btn' type='button' class="btn btn-default">Sign In</button>
       </form><br>
       <div id="sign-in-form-errors"></div>
     </div>
   </div>
 </div>
+<script>
+$('form').keypress( function( e ) {
+  var code = e.keyCode || e.which;
+
+  if( code === 13 ) {
+    $('#sign-in-btn').click();
+    return false;
+  }
+})
+</script>

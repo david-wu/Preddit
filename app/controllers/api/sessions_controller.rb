@@ -4,7 +4,7 @@ class Api::SessionsController < ApplicationController
     p params["user"]["password"]
     if @user.is_password?(params["user"]["password"])
       @user.reset_token()
-      render json: { token: @user.session_token}
+      render json: { token: @user.session_token, user: @user}
     else
       render json: { errors: @user.errors.full_messages }, status: 422
     end
@@ -13,4 +13,5 @@ class Api::SessionsController < ApplicationController
   def user_params
     params.require(:user).permit(:username)
   end
+
 end

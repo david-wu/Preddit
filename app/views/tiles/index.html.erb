@@ -53,13 +53,19 @@
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Account <b class="caret"></b>
+            <span id="current_user_in_nav_bar"><%= current_user %></span> <b class="caret"></b>
           </a>
-          <ul class="dropdown-menu">
-            <li><a href="#newUser">Sign up</a></li>
-            <li><a href="#newSession">Log In</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Settings</a></li>
+          <ul id="main-nav-dropdown" class="dropdown-menu">
+            <% if(current_user=="Account")%>
+              <li><a href="#newUser">Sign up</a></li>
+              <li><a href="#newSession">Log In</a></li>
+            <% else %>
+              <li><a href="#destroySession">Sign Out</a></li>
+              <li class="divider"></li>
+              <li><a href="#editSettings">Settings</a></li>
+            <%end%>
+
+
           </ul>
         </li>
       </ul>

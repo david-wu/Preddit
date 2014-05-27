@@ -1,5 +1,9 @@
 Wreddit.Collections.Tiles = Backbone.Collection.extend({
   // this just calls the callback with an array of fetched tiles
+  url: function(){
+
+  },
+
   fetch: function(option){
     option.success();
     console.log('would fetch, but no rails yet')
@@ -51,8 +55,11 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
 
 
   },
-  initialize: function (){
+  initialize: function (feedName){
     this.lastTile = '';
+    if(feedName){
+      this.feedName = feedName;
+    }
   },
   _isUnique: function(candidateTile){
 

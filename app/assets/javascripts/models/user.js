@@ -9,9 +9,28 @@ Wreddit.Models.User = Backbone.Model.extend({
       success: callback.bind(this),
       error: callback.bind(this),
     });
-  }
+  },
+  // currentUser: function (token, callback){
+  //   $.ajax({
+  //     type: "POST",
+  //     data: token,
+  //     url: "api/users/current",
+  //     dataType: "json",
+  //     success: callback.bind(this),
+  //     error: callback.bind(this),
+  //   })
+  // }
 })
-
+Wreddit.Models.User.currentUser = function (token, callback){
+  $.ajax({
+    type: "POST",
+    data: token,
+    url: "api/users/current",
+    dataType: "json",
+    success: callback.bind(this),
+    error: callback.bind(this),
+  })
+}
 // function(data){
 //         alert('welcome! ' + data.token)
 //         Wreddit.router.session_token = data.token;

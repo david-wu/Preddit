@@ -11,6 +11,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     "f/:feed": "visitFeed",
     "newUser": "signUp",
     "newSession": "signIn",
+    "destroySession": "signOut",
+    "editSettings": "editSettings"
   },
   visitInitialWall: function(){
     Wreddit.router.navigate('#r/all', {trigger:true});
@@ -30,21 +32,56 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapWall(this.feeds[feedName]);
   },
   signUp: function () {
-    if(!this.newUserView){
-      this.newUserView = new Wreddit.Views.SignUp({})
-    }
-    this.newUserView.render();
+    this.newUserView = new Wreddit.Views.SignUp({})
+
+
     this._swapView(this.newUserView);
+    this.newUserView.render();
   },
   signIn: function () {
-    if(!this.newSessionView){
-      this.newSessionView = new Wreddit.Views.SignIn({})
-    }
-    this.newSessionView.render();
+    this.newSessionView = new Wreddit.Views.SignIn({})
+
+
     this._swapView(this.newSessionView);
+    this.newSessionView.render();
+  },
+  signOut: function () {
+    document.cookie =
+    "sessionToken=bleh; expires=Thu, 18 Dec 2000 12:00:00 GMT; path=/";
+    this._refreshSession();
+  },
+  editSettings: function () {
+
   },
 
 
+  _refreshSession: function (){
+    var that = this;
+    that.currentUser = new Wreddit.Models.User()
+    Wreddit.Models.User.currentUser(document.cookie, function(resp){
+      console.log(resp)
+      if(resp.user){
+        that.currentUser = new Wreddit.Models.User(resp.user)
+        console.log(that.currentUser)
+      }
+      that._refreshNavBar(that.currentUser);
+    })
+  },
+
+
+
+
+  _refreshNavBar: function (user){
+    if(user.id){
+      console.log("refreshing", user)
+      $('#current_user_in_nav_bar').html(user.username);
+      $('#main-nav-dropdown').html('<li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li>');
+    }else{
+      console.log("refreshing nil user")
+      $('#current_user_in_nav_bar').html("Account");
+      $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li>');
+    }
+  },
   _createWall: function (wallName, type) {
     if (type === 'sub'){
       var $parentOfLinkToWall = $('#allWall-links')
@@ -120,6 +157,10 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
 
   _swapView: function (view){
     console.log("_swapView("+view+")")
+    if (this._currentView) {
+      this._currentView.remove();
+    }
+    this._currenView = view;
     this.$minorEl.show();
     this.$rootEl.hide();
     this.$minorEl.html(view.$el);
