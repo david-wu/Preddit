@@ -23,10 +23,14 @@ Wreddit.Views.Wall = Backbone.View.extend({
           }
       })
     } else if(this.type === 'feed'){
-      this.collection.fetch({
-        success: function(){
-          console.log("david, work on rails. serious")
-        },
+      this.collection.fetch(this.wallName,
+        function(newTiles){
+
+          that.loading = false;
+          for(var $i = 0; $i < newTiles.length; $i++){
+            var newTile = new Wreddit.Models.Tile(newTiles[$i])
+            that.addTile(newTile, false)
+          }
       })
     }
   },
@@ -51,12 +55,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
       },
       stop: function (event, ui) {
         event.preventDefault();
-
-        var sentModel = window.Wreddit.router.subs[ui.item[0].classList[0]].collection.get(ui.item[0].id);
-        var targetView = window.Wreddit.router.feeds[event.toElement.firstChild.data].view;
-
-        console.log(sentModel, targetView);
-        targetView.addTile(sentModel, true);
+        that._dragEvent(event, ui);
       },
     })
 
@@ -77,6 +76,28 @@ Wreddit.Views.Wall = Backbone.View.extend({
     })
 
     return this;
+  },
+  _dragEvent: function(event, ui){
+    var sentModel = window.Wreddit.router.subs[ui.item[0].classList[0]].collection.get(ui.item[0].id);
+    var targetName = event.toElement.firstChild.data
+    var targetView = window.Wreddit.router.feeds[event.toElement.firstChild.data].view;
+
+    sentModel = new Wreddit.Models.Tile(sentModel.attributes);
+    sentModel.set({sender_id: Wreddit.router.currentUser.get('id')});
+    sentModel.attributes.target_name = targetName;
+    delete sentModel.attributes.id;
+    delete sentModel.id;
+    targetView.addTile(sentModel, true);
+
+    sentModel.save([],{
+      success: function(model, response){
+        console.log(response.tile)
+      },
+      error: function(model, response){
+        console.log(response)
+      }
+    });
+
   },
   initialize: function (options) {
     this.type = options.type;

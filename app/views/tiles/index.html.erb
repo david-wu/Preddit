@@ -35,37 +35,17 @@
 
 
 
-
       <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input id='subreddit-field' type="text" class='form-control' placeholder="Enter subreddit">
-          <script>
-          $('#subreddit-field').keypress(function (event){
-            if(event.which === 13){
-              event.preventDefault();
-              Wreddit.router.navigate('#r/'+$('#subreddit-field').val(), {trigger: true, replace: true})
-              $('#subreddit-field').val('');
-            }
-          })
-          </script>
-        </div>
+
       </form>
+
 
 
 
       <ul class="nav navbar-nav navbar-right">
         <li style="padding-top: 7px">
-          <input id='user-field' type="text" class="form-control" placeholder="Enter User">
+          <input id='subreddit-field' type="text" class='form-control' placeholder="Search">
         </li>
-        <script>
-        $('#user-field').keypress(function (event){
-          if(event.which === 13){
-            event.preventDefault();
-            Wreddit.router.navigate('#f/'+$('#user-field').val(), {trigger: true, replace: true})
-            $('#user-field').val('');
-          }
-        })
-        </script>
 
         <!-- <li id="trash-drop" ondrop="drop(event)" ondragover="allowDrop(event)">
           <%= image_tag("trash-icon.png", title: "Drag things here to delete", id: "trash-drop", style: "margin-top: 12px", alt: "delete element", size: '25') %>

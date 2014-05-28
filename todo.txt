@@ -1,3 +1,6 @@
+store tiles in database
+load tiles from databse
+
 drag things to trash or put in close buttons
 editable tiles
 editable subreddit/usernames

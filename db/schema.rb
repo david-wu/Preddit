@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140527164159) do
+ActiveRecord::Schema.define(version: 20140528175039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,20 @@ ActiveRecord::Schema.define(version: 20140527164159) do
     t.integer  "userId"
     t.string   "name"
     t.string   "vanity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tiles", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "sender_id"
+    t.string   "title"
+    t.string   "url"
+    t.string   "author"
+    t.string   "domain"
+    t.string   "imgSrc"
+    t.string   "permalink"
+    t.string   "subreddit"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

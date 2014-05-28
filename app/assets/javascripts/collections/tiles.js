@@ -1,14 +1,12 @@
 Wreddit.Collections.Tiles = Backbone.Collection.extend({
   // this just calls the callback with an array of fetched tiles
-  url: function(){
-
+  fetch: function(feedName, callback){
+    var url = "/api/tiles/"+feedName;
+    $.getJSON(url, function(data){
+      callback(data.tiles);
+    })
   },
-
-  fetch: function(option){
-    option.success();
-    console.log('would fetch, but no rails yet')
-  },
-    getMore: function(subrs, callback){
+  getMore: function(subrs, callback){
     var that = this;
     // var subs = subrs.join('+');
  console.log("http://www.reddit.com/r/"+subrs+".json?limit=15&after="+this.lastTile+"&jsonp=?")

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post 'users/current' => 'users#current'
 
     resource :session
+    resources :tiles
   end
 
 end

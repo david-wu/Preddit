@@ -1,43 +1,64 @@
 Wreddit.Routers.Tiles = Backbone.Router.extend({
   initialize: function (options){
+    var that = this;
     this.$rootEl = options.rootEl;
     this.$minorEl = options.minorEl;
     this.subs = {};
     this.feeds = {};
     this.data = [
-      { label: "Funny", category: "subreddits" },
-      { label: "Pics", category: "subreddits" },
-      { label: "AskReddit", category: "subreddits" },
-      { label: "IAmA", category: "subreddits" },
-      { label: "News", category: "subreddits" },
-      { label: "All", category: "subreddits" },
-      { label: "TodayILearned", category: "subreddits" },
-      { label: "worldNews", category: "subreddits" },
-      { label: "Aww", category: "subreddits" },
-      { label: "Gifs", category: "subreddits" },
-      { label: "Videos", category: "subreddits" },
-      { label: "ExplainLikeImFive", category: "subreddits" },
-      { label: "Music", category: "subreddits" },
-      { label: "Movies", category: "subreddits" },
-      { label: "Sports", category: "subreddits" },
-      { label: "Television", category: "subreddits" },
-      { label: "Gaming", category: "subreddits" },
-      { label: "Science", category: "subreddits" },
-      { label: "EarthPorn", category: "subreddits" },
-      { label: "AskScience", category: "subreddits" },
-      { label: "Books", category: "subreddits" },
-      { label: "UpliftingNews", category: "subreddits" },
-      { label: "MildlyInteresting", category: "subreddits" },
+      { label: "Funny", category: "Subreddits" },
+      { label: "Pics", category: "Subreddits" },
+      { label: "AskReddit", category: "Subreddits" },
+      { label: "IAmA", category: "Subreddits" },
+      { label: "News", category: "Subreddits" },
+      { label: "All", category: "Subreddits" },
+      { label: "TodayILearned", category: "Subreddits" },
+      { label: "worldNews", category: "Subreddits" },
+      { label: "Aww", category: "Subreddits" },
+      { label: "Gifs", category: "Subreddits" },
+      { label: "Videos", category: "Subreddits" },
+      { label: "ExplainLikeImFive", category: "Subreddits" },
+      { label: "Music", category: "Subreddits" },
+      { label: "Movies", category: "Subreddits" },
+      { label: "Sports", category: "Subreddits" },
+      { label: "Television", category: "Subreddits" },
+      { label: "Gaming", category: "Subreddits" },
+      { label: "Science", category: "Subreddits" },
+      { label: "EarthPorn", category: "Subreddits" },
+      { label: "AskScience", category: "Subreddits" },
+      { label: "Books", category: "Subreddits" },
+      { label: "UpliftingNews", category: "Subreddits" },
+      { label: "MildlyInteresting", category: "Subreddits" },
+      { label: "Sloths", category: "Subreddits" },
+      { label: "Cats", category: "Subreddits" },
+      { label: "Dogs", category: "Subreddits" },
     ];
-    var that = this;
-    // puts the search dropdown on top
+
     $(document).ready(function(){
 
-
+      $('#subreddit-field').keypress(function (event){
+        if(event.which === 13){
+          event.preventDefault();
+          var input = $('#subreddit-field').val();
+          var isUser = false
+          for(var i = 0; i < that.data.length; i++){
+            if(that.data[i].category==='Users' && that.data[i].label === input){
+              isUser = true;
+            }
+          }
+          if(isUser){
+            Wreddit.router.navigate('#f/'+$('#subreddit-field').val(), {trigger: true})
+          }else{
+            Wreddit.router.navigate('#r/'+$('#subreddit-field').val(), {trigger: true})
+          }
+          $('#subreddit-field').val('');
+        }
+      })
 
       $( "#subreddit-field" ).catcomplete({
         delay: 0,
-        source: that.data
+        source: that.data,
+        autoFocus: true,
       });
 
       $('.ui-autocomplete.ui-front').css("zIndex", 1000000);
@@ -90,7 +111,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._refreshNavBar(this.currentUser);
     $('#allWall-links').html('')
     $('#allFeed-links').html('')
-
+    this.subs = {};
+    this.feeds = {};
   },
   editSettings: function () {
     this.newSettingsView = new Wreddit.Views.Settings({})
@@ -114,9 +136,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     // this._refreshSearchBars();
     this._refreshUsers();
     if(user.id){
-
       $('#current_user_in_nav_bar').html(user.get('username'));
-
       $('#main-nav-dropdown').html('<li><a href="#f/'+user.get('username')+'">My Wall</a></li><li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li>');
     }else{
       $('#current_user_in_nav_bar').html("Account");
