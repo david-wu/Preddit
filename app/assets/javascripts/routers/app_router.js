@@ -114,6 +114,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     // this._refreshSearchBars();
     this._refreshUsers();
     if(user.id){
+
       $('#current_user_in_nav_bar').html(user.get('username'));
 
       $('#main-nav-dropdown').html('<li><a href="#f/'+user.get('username')+'">My Wall</a></li><li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li>');
@@ -129,8 +130,15 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       success: function(users){
 
         users.each(function(user){
-
-          that.data.push({label: user.get('username'), category: "Users"})
+          var repeat = false;
+          for(var i = 0; i < that.data.length; i++){
+            if(that.data[i].label === user.get('username')){
+              repeat = true;
+            }
+          }
+          if(!repeat){
+            that.data.push({label: user.get('username'), category: "Users"})
+          }
         })
       },
       error: function(){

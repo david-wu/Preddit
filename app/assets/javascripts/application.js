@@ -16,8 +16,8 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require backbone
+//= require jquery.serializeJSON
 //= require typeahead
-//
 //= require wreddit
 //= require_tree ./models
 //= require_tree ./collections
@@ -27,4 +27,3 @@
 //= require masonry
 //= require bootstrap
 //= require imagesloaded.pkgd.js
-//= require jquery.serializeJSON
