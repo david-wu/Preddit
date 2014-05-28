@@ -4,6 +4,46 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$minorEl = options.minorEl;
     this.subs = {};
     this.feeds = {};
+    this.data = [
+      { label: "Funny", category: "subreddits" },
+      { label: "Pics", category: "subreddits" },
+      { label: "AskReddit", category: "subreddits" },
+      { label: "IAmA", category: "subreddits" },
+      { label: "News", category: "subreddits" },
+      { label: "All", category: "subreddits" },
+      { label: "TodayILearned", category: "subreddits" },
+      { label: "worldNews", category: "subreddits" },
+      { label: "Aww", category: "subreddits" },
+      { label: "Gifs", category: "subreddits" },
+      { label: "Videos", category: "subreddits" },
+      { label: "ExplainLikeImFive", category: "subreddits" },
+      { label: "Music", category: "subreddits" },
+      { label: "Movies", category: "subreddits" },
+      { label: "Sports", category: "subreddits" },
+      { label: "Television", category: "subreddits" },
+      { label: "Gaming", category: "subreddits" },
+      { label: "Science", category: "subreddits" },
+      { label: "EarthPorn", category: "subreddits" },
+      { label: "AskScience", category: "subreddits" },
+      { label: "Books", category: "subreddits" },
+      { label: "UpliftingNews", category: "subreddits" },
+      { label: "MildlyInteresting", category: "subreddits" },
+    ];
+    var that = this;
+    // puts the search dropdown on top
+    $(document).ready(function(){
+
+
+
+      $( "#subreddit-field" ).catcomplete({
+        delay: 0,
+        source: that.data
+      });
+
+      $('.ui-autocomplete.ui-front').css("zIndex", 1000000);
+
+    })
+
   },
   routes: {
     "": "visitDefaultWall",
@@ -86,7 +126,12 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     var that = this;
     this.users = new Wreddit.Collections.Users();
     this.users.fetch({
-      success: function(){
+      success: function(users){
+
+        users.each(function(user){
+
+          that.data.push({label: user.get('username'), category: "Users"})
+        })
       },
       error: function(){
       }

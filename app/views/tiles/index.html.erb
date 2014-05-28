@@ -1,3 +1,46 @@
+<!-- used for dropdown search bar, not sure -->
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Autocomplete - Categories</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+  .ui-autocomplete-category {
+    font-weight: bold;
+    padding: .2em .4em;
+    margin: .8em 0 .2em;
+    line-height: 1.5;
+
+  }
+  </style>
+  <script>
+  $.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+      var that = this,
+        currentCategory = "";
+      $.each( items, function( index, item ) {
+        if ( item.category != currentCategory ) {
+          ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+          currentCategory = item.category;
+        }
+        that._renderItemData( ul, item );
+      });
+    }
+  });
+
+
+  </script>
+</head>
+
+
+
+
+
+
+
+
 <nav id="main-navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -17,6 +60,15 @@
       <ul id="allWall-links" class="nav navbar-nav">
       </ul>
 
+
+
+
+<!-- <label for="auto-complete-search">Search: </label>
+<input id="auto-complete-search"> -->
+
+
+
+
       <form class="navbar-form navbar-left" role="search">
         <div class="form-group">
           <input id='subreddit-field' type="text" class='form-control' placeholder="Enter subreddit">
@@ -31,6 +83,7 @@
           </script>
         </div>
       </form>
+
 
 
       <ul class="nav navbar-nav navbar-right">
@@ -88,3 +141,8 @@
 
 <div id="allWalls">
 </div>
+
+
+
+
+
