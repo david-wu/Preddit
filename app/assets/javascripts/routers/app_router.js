@@ -53,7 +53,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
 
   },
   editSettings: function () {
-
+    this.newSettingsView = new Wreddit.Views.Settings({})
+    this._swapView(this.newSettingsView);
+    this.newSettingsView.render();
   },
 
   _refreshSession: function (){
@@ -72,8 +74,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     // this._refreshSearchBars();
     this._refreshUsers();
     if(user.id){
-      $('#current_user_in_nav_bar').html(user.username);
-      $('#main-nav-dropdown').html('<li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li>');
+      $('#current_user_in_nav_bar').html(user.get('username'));
+
+      $('#main-nav-dropdown').html('<li><a href="#f/'+user.get('username')+'">My Wall</a></li><li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li>');
     }else{
       $('#current_user_in_nav_bar').html("Account");
       $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li>');

@@ -1,8 +1,10 @@
 <!--A hidden tile that shows and appends itself-->
+
 <div id='<%=tile.cid%>' class="<%=wallName%> tile panel panel-primary">
   <a id='<%=tile.cid%>' href='<%= tile.get('url') %>'>
-    <%= tile.cid%>: <%=tile.get('title')%>
+    <%=tile.get('title')%>
   </a>
+  <a href="http://www.reddit.com<%= tile.get('permalink')%>"> comments</a>
   <div id='<%=tile.cid%>' class="<%=tile.cid%>-media" title="<%= tile.get('title')%>">
 
     <% if(tile.get('imgSrc')){ %>

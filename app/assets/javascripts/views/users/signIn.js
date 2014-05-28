@@ -18,14 +18,16 @@ Wreddit.Views.SignIn = Backbone.View.extend({
 
     var currentUser = new Wreddit.Models.User(attrs);
     currentUser.signIn(function(response){
-                            console.log(response)
 
       if(response.session_token){
 
         Wreddit.router.session_token = response.session_token;
-        document.cookie =
-        "sessionToken="+response.session_token+"; expires=Thu, 18 Dec 3000 12:00:00 GMT; path=/";
-        Wreddit.router._refreshNavBar(response);
+
+        document.cookie = "sessionToken="+response.session_token+"; expires=Thu, 18 Dec 3000 12:00:00 GMT; path=/";
+
+        Wreddit.router._refreshNavBar(new Wreddit.Models.User(response));
+
+
         Wreddit.router.navigate('#f/'+response.username, {trigger: true})
       }else{
         console.log("fail!!")
