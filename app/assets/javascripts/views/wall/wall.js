@@ -48,13 +48,52 @@ Wreddit.Views.Wall = Backbone.View.extend({
       placeholder: '#nothing',
       distance: 5,
       start: function(event, ui) {
-        event.preventDefault;
+
+
+        // that.temp.tempWallLinks = $('#allWall-links').html()
+        $('#allWall-links').animate({
+          opacity: 0,
+        }, 500)
+        $('#subreddit-field').animate({
+          opacity: 0,
+        }, 500)
+        $('#nav-bar-dropdown-menu').animate({
+          opacity: 0,
+        }, 500)
+        $('.wall-link.ui-sortable').animate({
+          position: 'relative',
+          top: 50,
+          'font-size': 100,
+          opacity: 1,
+        }, 500)
+        $('#main-navbar').animate({
+          opacity: 1,
+        }, 500)
       },
       receive: function(event, ui) {
-        event.preventDefault;
+
       },
       stop: function (event, ui) {
         event.preventDefault();
+
+        // $('#allWall-links').html(that.temp.tempWallLinks)
+        $('#allWall-links').animate({
+          opacity: 1,
+        }, 500)
+        $('#subreddit-field').animate({
+          opacity: 1,
+        }, 500)
+        $('#nav-bar-dropdown-menu').animate({
+          opacity: 1,
+        }, 500)
+        $('.wall-link.ui-sortable').animate({
+          position: 'relative',
+          top: 0,
+          'font-size': 14,
+        }, 500)
+        $('#main-navbar').animate({
+          opacity: 1,
+        }, 500)
         that._dragEvent(event, ui);
       },
     })
@@ -103,6 +142,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     this.type = options.type;
     this.wallName = options.wallName;
     this.loading = false;
+    this.temp = {};
     var that = this;
 
     this.$el.html(JST['wall/mason']({
@@ -119,7 +159,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
           that.loadMore();
         }
         var allTiles = $('.tile');
-        if(allTiles.length > 200){
+        if(allTiles.length > 100){
           window[that.wallName + 'msnry'].remove($('.tile').slice(0,25));
         }
       }

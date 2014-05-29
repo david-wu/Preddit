@@ -73,7 +73,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     "newUser": "signUp",
     "newSession": "signIn",
     "destroySession": "signOut",
-    "editSettings": "editSettings"
+    "editSettings": "editSettings",
+    "viewAbout": "viewAbout"
   },
   visitDefaultWall: function(){
     Wreddit.router.navigate('#r/aww', {trigger:true});
@@ -111,6 +112,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._refreshNavBar(this.currentUser);
     $('#allWall-links').html('')
     $('#allFeed-links').html('')
+    this.$rootEl.html('');
+    this.$minorEl.html('');
     this.subs = {};
     this.feeds = {};
   },
@@ -119,7 +122,11 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapView(this.newSettingsView);
     this.newSettingsView.render();
   },
-
+  viewAbout: function () {
+    this.aboutView = new Wreddit.Views.About({})
+    this._swapView(this.aboutView);
+    this.aboutView.render();
+  },
   _refreshSession: function (){
     var that = this;
     if(!that.currentUser){
@@ -137,10 +144,10 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._refreshUsers();
     if(user.id){
       $('#current_user_in_nav_bar').html(user.get('username'));
-      $('#main-nav-dropdown').html('<li><a href="#f/'+user.get('username')+'">My Wall</a></li><li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li>');
+      $('#main-nav-dropdown').html('<li><a href="#f/'+user.get('username')+'">My Wall</a></li><li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li><li><a href="#viewAbout">About</a></li>');
     }else{
       $('#current_user_in_nav_bar').html("Account");
-      $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li>');
+      $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li><li class="divider"></li><li><a href="#viewAbout">About</a></li>');
     }
   },
   _refreshUsers: function (){
@@ -192,11 +199,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
 
   _swapWall: function (showWall){
 
-    //saves lastPos
-    if(this._currentWall){
-      this._currentWall.lastPos = $(window).scrollTop();
-    }
-    this._currentWall = showWall;
 
     //hide all walls, then show showWall
     console.log("_swapWall("+showWall.name+")")
@@ -211,21 +213,24 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this.feeds[feedsArr[$i]].view.$el.hide();
     }
     showWall.view.$el.show();
-
     window[showWall.name + 'msnry'].options.transitionDuration = 0;
     window[showWall.name + 'msnry'].layout();
     window[showWall.name + 'msnry'].options.transitionDuration = "0.4s";
 
     //moves screen position back to lastPos
+    if(this._currentWall){
+      this._currentWall.lastPos = $(window).scrollTop();
+    }
+    this._currentWall = showWall;
     if(showWall.lastPos){
-      console.log("moving to:"+showWall.lastPos)
       $('html, body').animate({
           scrollTop: showWall.lastPos,
           scrollLeft: 0
       }, 0);
     }
+
     //call loadMore() until page is full
-    var attemptsLeft = 10;
+    var attemptsLeft = 7;
     function initialLoadMore () {
       attemptsLeft--;
       if (attemptsLeft <= 0 || $(document).height() > $(window).height()*1.5) {

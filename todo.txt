@@ -1,9 +1,18 @@
-store tiles in database
-load tiles from databse
+clean up code
+list who tile is from
+be able to resend tiles that you received
 
-drag things to trash or put in close buttons
+
+put in close buttons
+
 editable tiles
 editable subreddit/usernames
 
 
 amazon paperclip cache thumbnails
+
+
+when start to drag, enlarge users, opacity
+wiggle user on successful save
+
+get swappable to work for other browsers

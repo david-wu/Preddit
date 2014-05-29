@@ -51,7 +51,7 @@
           <%= image_tag("trash-icon.png", title: "Drag things here to delete", id: "trash-drop", style: "margin-top: 12px", alt: "delete element", size: '25') %>
         </li> -->
 
-        <li class="dropdown">
+        <li id='nav-bar-dropdown-menu' class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <span id="current_user_in_nav_bar"><%= current_user %></span> <b class="caret"></b>
           </a>
@@ -59,10 +59,13 @@
             <% if(current_user=="Account")%>
               <li><a href="#newUser">Sign up</a></li>
               <li><a href="#newSession">Log In</a></li>
+              <li class="divider"></li>
+              <li><a href="#viewAbout">About</a></li>
             <% else %>
               <li><a href="#destroySession">Sign Out</a></li>
               <li class="divider"></li>
               <li><a href="#editSettings">Settings</a></li>
+              <li><a href="#viewAbout">About</a></li>
             <%end%>
 
 
