@@ -194,7 +194,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       type: type
     });
     $('#allWalls').append(wall.view.$el);
-    $parentOfLinkToWall[appendOrPrepend]('<li id=_link'+wallName+'> <a href="#'+typeId+wallName+'" class="wall-link">'+wallName+'</a></li>');
+    $parentOfLinkToWall[appendOrPrepend]('<li id=_link'+wallName+'><a href="#'+typeId+wallName+'" class="nav-bar-feed-link wall-link '+type+'"><div id="higlight-box">'+wallName+'</div></a></li>');
   },
 
   _swapWall: function (showWall){

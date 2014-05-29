@@ -60,15 +60,19 @@ Wreddit.Views.Wall = Backbone.View.extend({
         $('#nav-bar-dropdown-menu').animate({
           opacity: 0,
         }, 500)
-        $('.wall-link.ui-sortable').animate({
+        $('.nav-bar-feed-link.wall-link.ui-sortable.feed').animate({
           position: 'relative',
-          top: 50,
+          top: 100,
+          display: 'block',
           'font-size': 100,
           opacity: 1,
+          margin: 50,
         }, 500)
         $('#main-navbar').animate({
-          opacity: 1,
+          opacity: 0.7,
+          height: '100%'
         }, 500)
+
       },
       receive: function(event, ui) {
 
@@ -86,13 +90,15 @@ Wreddit.Views.Wall = Backbone.View.extend({
         $('#nav-bar-dropdown-menu').animate({
           opacity: 1,
         }, 500)
-        $('.wall-link.ui-sortable').animate({
+        $('.nav-bar-feed-link.wall-link.ui-sortable.feed').animate({
           position: 'relative',
           top: 0,
           'font-size': 14,
+          margin: 0,
         }, 500)
         $('#main-navbar').animate({
           opacity: 1,
+          height: 50,
         }, 500)
         that._dragEvent(event, ui);
       },
@@ -159,7 +165,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
           that.loadMore();
         }
         var allTiles = $('.tile');
-        if(allTiles.length > 100){
+        if(allTiles.length > 300){
           window[that.wallName + 'msnry'].remove($('.tile').slice(0,25));
         }
       }
