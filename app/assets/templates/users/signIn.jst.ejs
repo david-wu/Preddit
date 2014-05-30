@@ -2,10 +2,16 @@
 
 <div class="container">
   <div class="row">
+
     <div class="col-xs-4">
+      <div class="jumbotron">
+        <h1>Sign In!</h1>
+        <p>Use the search bar to add sub-reddits and other users.  Click and drag pictures onto users to send them a copy.</p>
+      </div>
+    </div>
 
-
-
+    <div class="col-xs-4">
+      <br><br><br><br><br>
       <form id="form-to-sign-in" role="form">
         <div class="form-group">
           <label for="username-field">Username</label>
@@ -20,6 +26,8 @@
       <div id="sign-in-form-errors"></div>
     </div>
   </div>
+
+
 </div>
 <script>
 $('form#form-to-sign-in').keypress( function( e ) {

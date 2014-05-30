@@ -6,7 +6,7 @@
   <a class='tile-comment-link' href="http://www.reddit.com<%= tile.get('permalink')%>">
     <span class="glyphicon glyphicon-comment"></span>
   </a>
-  <a id='<%=tile.cid%>' href='<%= tile.get('url') %>'>
+  <a class="tile-title-text" id='<%=tile.cid%>' href='<%= tile.get('url') %>'>
     <%=tile.get('title')%>
   </a>
 
@@ -23,8 +23,8 @@
     <% } %>
   </div>
 
-  <!-- Show this modal when images are clicked -->
-  <div class="modal fade" id="<%= tile.cid%>-<%=wallName%>-bare-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <!-- bare image modal -->
+  <div class="modal fade" id="<%= tile.cid%>-<%=wallName%>-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog bare-modal">
       <div class="modal-content bare-modal">
         <div class="modal-body bare-modal">
@@ -36,8 +36,8 @@
 
 
 
-
-  <div class="modal fade" id="<%= tile.cid%>-<%=wallName%>-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <!-- eventually, use this one for adding comments -->
+  <div class="modal fade" id="<%= tile.cid%>-<%=wallName%>-bare-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">

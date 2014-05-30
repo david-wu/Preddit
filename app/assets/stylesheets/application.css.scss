@@ -28,6 +28,7 @@
   color: #369 !important;
   font: normal verdana,arial,helvetica,sans-serif;
   font-weight: bold;
+  float: left;
 }
 #nothing {
 }
@@ -70,13 +71,13 @@ button.close.tile-closer:hover{
 
 
 .modal-image {
-  max-width: 700px;
+  width: 700px;
 }
 .bare-modal.modal-image {
-  max-width: 800px;
+  max-width: 800px !important;
 }
 .bare-modal.modal-body{
-  max-width: 800px;
+  max-width: 800px !important;
 }
 .bare-modal.modal-content{
   width: 0px;
@@ -85,4 +86,6 @@ button.close.tile-closer:hover{
 
 
 
-
+.tile-title-text {
+  margin: 5px;
+}
