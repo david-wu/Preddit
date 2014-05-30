@@ -164,6 +164,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._refreshNavBar(this.currentUser);
     this.$rootEl.html('');
     this.$minorEl.html('');
+    $('#allWall-links').html('')
+    $('#allFeed-links').html('')
     this.subs = {};
     this.feeds = {};
     this.navigate('#newSession', {trigger:true});

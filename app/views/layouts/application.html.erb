@@ -2,6 +2,7 @@
 <html>
 <head authenticity_token="<%= form_authenticity_token %>">
   <title>Pretty Reddit</title>
+  <%= favicon_link_tag 'favicon.ico'%>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => false %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => false %>
   <%= csrf_meta_tags %>
