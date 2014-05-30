@@ -3,6 +3,7 @@ class CreateTiles < ActiveRecord::Migration
     create_table :tiles do |t|
       t.integer :user_id
       t.integer :sender_id
+      t.string :sender_name
       t.string :title
       t.string :url
       t.string :author
@@ -10,7 +11,6 @@ class CreateTiles < ActiveRecord::Migration
       t.string :imgSrc
       t.string :permalink
       t.string :subreddit
-
 
       t.timestamps
     end

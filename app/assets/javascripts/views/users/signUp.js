@@ -4,14 +4,13 @@ Wreddit.Views.SignUp = Backbone.View.extend({
   },
   template: JST['users/signUp'],
   render: function () {
-    console.log('UserNew#render')
     var renderedContent = this.template({
     });
     this.$el.html(renderedContent);
     return this;
   },
   signUp: function (event){
-    console.log('singup!')
+    // prepare User model
     event.preventDefault();
     var attrs = $(event.target.form).serializeJSON();
     if(attrs.user.password !== attrs.user.confirmPassword){
@@ -20,8 +19,8 @@ Wreddit.Views.SignUp = Backbone.View.extend({
     }
     attrs.authenticity_token = $('head').attr('authenticity_token')
     attrs.utf8 = "✓"
-
     var currentUser = new Wreddit.Models.User(attrs);
+    // atempt to create User
     currentUser.save([],{
       success: function(model, response){
         Wreddit.router.session_token = response.token;
@@ -34,11 +33,7 @@ Wreddit.Views.SignUp = Backbone.View.extend({
         _.each(response.responseJSON.errors, function(error){
           $('#sign-up-form-errors').html(' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><div class="alert alert-danger alert-dismissable">'+error+'</div>')
         })
-
       },
     })
-
-
-
   }
 })

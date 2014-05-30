@@ -32,6 +32,48 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       { label: "Sloths", category: "Subreddits" },
       { label: "Cats", category: "Subreddits" },
       { label: "Dogs", category: "Subreddits" },
+      { label: "InternetIsBeautiful", category: "Subreddits" },
+      { label: "GetMotivated", category: "Subreddits" },
+      { label: "Food", category: "Subreddits" },
+      { label: "NoSleep", category: "Subreddits" },
+      { label: "OldSchoolCool", category: "Subreddits" },
+      { label: "TwoXChromosomes", category: "Subreddits" },
+      { label: "LifeProTips", category: "Subreddits" },
+      { label: "Futurology", category: "Subreddits" },
+      { label: "WritingPrompts", category: "Subreddits" },
+      { label: "DataIsBeautiful", category: "Subreddits" },
+      { label: "listentothis", category: "Subreddits" },
+      { label: "DIY", category: "Subreddits" },
+      { label: "Jokes", category: "Subreddits" },
+      { label: "Showerthoughts", category: "Subreddits" },
+      { label: "Art", category: "Subreddits" },
+      { label: "Gadgets", category: "Subreddits" },
+      { label: "PersonalFinance", category: "Subreddits" },
+      { label: "History", category: "Subreddits" },
+      { label: "Philosophy", category: "Subreddits" },
+      { label: "Fitness", category: "Subreddits" },
+      { label: "Tifu", category: "Subreddits" },
+      { label: "Space", category: "Subreddits" },
+      { label: "PhotoshopBattles", category: "Subreddits" },
+      { label: "Documentaries", category: "Subreddits" },
+      { label: "Creepy", category: "Subreddits" },
+      { label: "NotTheOnion", category: "Subreddits" },
+      { label: "WoahDude", category: "Subreddits" },
+      { label: "Unexpected", category: "Subreddits" },
+      { label: "ReactionGifs", category: "Subreddits" },
+      { label: "FirstWorldAnarchists", category: "Subreddits" },
+      { label: "FoodPorn", category: "Subreddits" },
+      { label: "HistoryPorn", category: "Subreddits" },
+      { label: "AdviceAnimals", category: "Subreddits" },
+      { label: "WTF", category: "Subreddits" },
+      { label: "LeagueOfLegends", category: "Subreddits" },
+      { label: "TrollXChromosomes", category: "Subreddits" },
+      { label: "DotA2", category: "Subreddits" },
+      { label: "PcMasterRace", category: "Subreddits" },
+      { label: "Pokemon", category: "Subreddits" },
+      { label: "Trees", category: "Subreddits" },
+      { label: "4chan", category: "Subreddits" },
+      { label: "GameOfThrones", category: "Subreddits" },
     ];
 
     $(document).ready(function(){
@@ -40,9 +82,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
         if(event.which === 13){
           event.preventDefault();
           var input = $('#subreddit-field').val();
-          var isUser = false
+          var isUser = false;
           for(var i = 0; i < that.data.length; i++){
-            if(that.data[i].category==='Users' && that.data[i].label === input){
+            if(that.data[i].category === 'Users' && that.data[i].label === input){
               isUser = true;
             }
           }
@@ -61,7 +103,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
         autoFocus: true,
       });
 
-      $('.ui-autocomplete.ui-front').css("zIndex", 1000000);
+      $('.ui-autocomplete.ui-front').css("zIndex", 10000);
 
     })
 
@@ -77,7 +119,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     "viewAbout": "viewAbout"
   },
   visitDefaultWall: function(){
-    Wreddit.router.navigate('#r/aww', {trigger:true});
+    this.router.navigate('#r/aww', {trigger:true});
   },
   visitSubWall: function(subName){
     if(!this.subs[subName]){
@@ -105,19 +147,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapView(this.newSessionView);
     this.newSessionView.render();
   },
-  signOut: function () {
-    document.cookie =
-    "sessionToken=a; expires=Thu, 18 Dec 2000 12:00:00 GMT; path=/";
-    this.currentUser = new Wreddit.Models.User();
-    this._refreshNavBar(this.currentUser);
-    $('#allWall-links').html('')
-    $('#allFeed-links').html('')
-    this.$rootEl.html('');
-    this.$minorEl.html('');
-    this.subs = {};
-    this.feeds = {};
-  },
-  editSettings: function () {
+    editSettings: function () {
     this.newSettingsView = new Wreddit.Views.Settings({})
     this._swapView(this.newSettingsView);
     this.newSettingsView.render();
@@ -127,20 +157,33 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapView(this.aboutView);
     this.aboutView.render();
   },
+  signOut: function () {
+    document.cookie =
+    "sessionToken=a; expires=Thu, 18 Dec 2000 12:00:00 GMT; path=/";
+    this.currentUser = new Wreddit.Models.User();
+    this._refreshNavBar(this.currentUser);
+    this.$rootEl.html('');
+    this.$minorEl.html('');
+    this.subs = {};
+    this.feeds = {};
+    this.navigate('#newSession', {trigger:true});
+  },
+
   _refreshSession: function (){
     var that = this;
-    if(!that.currentUser){
-      that.currentUser = new Wreddit.Models.User()
+    if(!this.currentUser){
+      this.currentUser = new Wreddit.Models.User()
     }
     Wreddit.Models.User.currentUser(document.cookie, function(user){
       if(user.id){
         that.currentUser = new Wreddit.Models.User(user)
+      }else{
+        console.log('not a valid user')
       }
       that._refreshNavBar(that.currentUser);
     })
   },
   _refreshNavBar: function (user){
-    // this._refreshSearchBars();
     this._refreshUsers();
     if(user.id){
       $('#current_user_in_nav_bar').html(user.get('username'));
@@ -168,8 +211,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
           }
         })
       },
-      error: function(){
-      }
     });
   },
 
@@ -185,6 +226,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       var wall = this.feeds[wallName] = {};
       var appendOrPrepend = 'prepend'
     }
+    wall.lastPos = 0;
     wall.name = wallName;
     wall.collection = new Wreddit.Collections.Tiles();
     wall.view = new Wreddit.Views.Wall({
@@ -194,12 +236,12 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       type: type
     });
     $('#allWalls').append(wall.view.$el);
-    $parentOfLinkToWall[appendOrPrepend]('<li id=_link'+wallName+'><a href="#'+typeId+wallName+'" class="nav-bar-feed-link wall-link '+type+'"><div id="higlight-box">'+wallName+'</div></a></li>');
+    $parentOfLinkToWall[appendOrPrepend]('<li id=_link'+wallName+
+    '><a href="#'+typeId+wallName+'" class="nav-bar-feed-link wall-link '+type+
+    '">'+wallName+'</a></li>');
   },
 
   _swapWall: function (showWall){
-
-
     //hide all walls, then show showWall
     console.log("_swapWall("+showWall.name+")")
     this.$minorEl.hide();
@@ -222,12 +264,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this._currentWall.lastPos = $(window).scrollTop();
     }
     this._currentWall = showWall;
-    if(showWall.lastPos){
-      $('html, body').animate({
-          scrollTop: showWall.lastPos,
-          scrollLeft: 0
-      }, 0);
-    }
+    $(window).scrollTop(showWall.lastPos);
 
     //call loadMore() until page is full
     var attemptsLeft = 7;
@@ -254,43 +291,5 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$rootEl.hide();
     this.$minorEl.html(view.$el);
   },
-    //COPYPASTA
-  _refreshSearchBars: function (){
-    var matcher = function(strs) {
-      return function findMatches(q, cb) {
-        var matches, substringRegex;
 
-        // an array that will be populated with substring matches
-        matches = [];
-
-        // regex used to determine if a string contains the substring `q`
-        substrRegex = new RegExp(q, 'i');
-
-        // iterate through the pool of strings and for any string that
-        // contains the substring `q`, add it to the `matches` array
-        $.each(strs, function(i, str) {
-          if (substrRegex.test(str)) {
-            // the typeahead jQuery plugin expects suggestions to a
-            // JavaScript object, refer to typeahead docs for more info
-            matches.push({ value: str });
-          }
-        });
-
-        cb(matches);
-      };
-    };
-
-    var users = ['david', 'dawu', 'premium']
-
-    $('#subreddit-field').typeahead({
-      minLength: 1,
-      highlight: true,
-      hint: true,
-    },
-    {
-      name: 'users',
-      displayKey: 'value',
-      source: matcher(users)
-    })
-  },
 })

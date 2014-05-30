@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20140528175039) do
   create_table "tiles", force: true do |t|
     t.integer  "user_id"
     t.integer  "sender_id"
+    t.string   "sender_name"
     t.string   "title"
     t.string   "url"
     t.string   "author"

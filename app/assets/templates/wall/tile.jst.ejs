@@ -1,10 +1,19 @@
 <!--A hidden tile that shows and appends itself-->
 
-<div id='<%=tile.cid%>' class="<%=wallName%> tile panel panel-primary">
+<div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> tile panel panel-primary">
+
+  <button type="button" class="close tile-closer" aria-hidden="true">&times;</button>
+  <a class='tile-comment-link' href="http://www.reddit.com<%= tile.get('permalink')%>">
+    <span class="glyphicon glyphicon-comment"></span>
+  </a>
   <a id='<%=tile.cid%>' href='<%= tile.get('url') %>'>
     <%=tile.get('title')%>
   </a>
-  <a href="http://www.reddit.com<%= tile.get('permalink')%>"> comments</a>
+
+  <% if(tile.get('sender_name')){ %>
+  <br>From: <a href="#/f/<%=tile.get('sender_name')%>"><%=tile.get('sender_name')%></a>
+  <% } %>
+
   <div id='<%=tile.cid%>' class="<%=tile.cid%>-media" title="<%= tile.get('title')%>">
 
     <% if(tile.get('imgSrc')){ %>
@@ -24,11 +33,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
 
 
 

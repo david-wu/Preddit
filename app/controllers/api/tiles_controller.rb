@@ -4,8 +4,8 @@ class Api::TilesController < ApplicationController
     @user = User.find_by(username: params['target_name'])
     @tile.user_id = @user.id
     @tile.sender_id = Integer(params['sender_id'])
-    p '########'*100
-    p @tile
+    @tile.sender_name = User.find(@tile.sender_id).username
+
     if @tile.save
       render json: { tile: @tile }
     else
@@ -21,5 +21,11 @@ class Api::TilesController < ApplicationController
     @user = User.find_by(username: params[:id])
     @tiles = Tile.where(user_id: @user.id)
     render json: { tiles: @tiles}
+  end
+
+  def destroy
+    @tile = Tile.find(params[:id])
+    @tile.destroy
+    render json: { tile: @tile}
   end
 end

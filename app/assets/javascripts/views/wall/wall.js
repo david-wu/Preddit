@@ -1,4 +1,23 @@
 Wreddit.Views.Wall = Backbone.View.extend({
+  events: {
+    'click button.close.tile-closer': 'closeTile',
+  },
+  closeTile: function(event){
+    var wallName = event.toElement.parentElement.getAttribute('wall-name')
+    var tileId = event.toElement.parentElement.getAttribute('id')
+    var modelId = event.toElement.parentElement.getAttribute('model-id')
+    $('#'+tileId).remove();
+
+    window[wallName + 'msnry'].remove($('#'+tileId))
+    window[wallName + 'msnry'].layout();
+
+    var model = Wreddit.router.feeds[wallName].collection.get(modelId);
+
+    if(model && Wreddit.router.currentUser.get('username') === wallName){
+      model.destroy();
+    }
+
+  },
   template: JST['wall/index'],
   addTile: function(tile, stealthAdd) {
     if(this.collection._isUnique(tile)){
@@ -44,7 +63,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     $('.wall.'+this.wallName).sortable({
       items: ".tile",
       tolerance: 'pointer',
-      connectWith: ".wall-link",
+      connectWith: "nav-bar-feed-link.wall-link.feed.ui-sortable",
       placeholder: '#nothing',
       distance: 5,
       start: function(event, ui) {
@@ -53,25 +72,26 @@ Wreddit.Views.Wall = Backbone.View.extend({
         // that.temp.tempWallLinks = $('#allWall-links').html()
         $('#allWall-links').animate({
           opacity: 0,
-        }, 500)
+        }, 100)
         $('#subreddit-field').animate({
           opacity: 0,
-        }, 500)
+        }, 100)
         $('#nav-bar-dropdown-menu').animate({
           opacity: 0,
-        }, 500)
-        $('.nav-bar-feed-link.wall-link.ui-sortable.feed').animate({
+        }, 100)
+        $('.nav-bar-feed-link.wall-link.feed').animate({
           position: 'relative',
-          top: 100,
-          display: 'block',
-          'font-size': 100,
-          opacity: 1,
-          margin: 50,
-        }, 500)
+          top: 150,
+          'font-size': 75,
+          margin: 75,
+        }, 100)
         $('#main-navbar').animate({
-          opacity: 0.7,
           height: '100%'
-        }, 500)
+        }, 100)
+        $('.nav-bar-feed-link.wall-link.sub.ui-sortable').animate({
+          display: 'none',
+        })
+
 
       },
       receive: function(event, ui) {
@@ -83,31 +103,30 @@ Wreddit.Views.Wall = Backbone.View.extend({
         // $('#allWall-links').html(that.temp.tempWallLinks)
         $('#allWall-links').animate({
           opacity: 1,
-        }, 500)
+        }, 400)
         $('#subreddit-field').animate({
           opacity: 1,
-        }, 500)
+        }, 400)
         $('#nav-bar-dropdown-menu').animate({
           opacity: 1,
-        }, 500)
-        $('.nav-bar-feed-link.wall-link.ui-sortable.feed').animate({
+        }, 400)
+        $('.nav-bar-feed-link.wall-link.feed').animate({
           position: 'relative',
           top: 0,
           'font-size': 14,
           margin: 0,
-        }, 500)
+        }, 400)
         $('#main-navbar').animate({
-          opacity: 1,
           height: 50,
-        }, 500)
+        }, 400)
         that._dragEvent(event, ui);
       },
     })
 
     $('.wall-link').sortable({
-      items: ".wall-link",
+      items: ".wall-link.feed",
       tolerance: 'pointer',
-      connectWith: ".wall-link",
+      connectWith: ".wall-link.feed",
       start: function(event, ui) {
         event.preventDefault;
       },
@@ -130,6 +149,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     sentModel = new Wreddit.Models.Tile(sentModel.attributes);
     sentModel.set({sender_id: Wreddit.router.currentUser.get('id')});
     sentModel.attributes.target_name = targetName;
+    sentModel.attributes.sender_name = Wreddit.router.currentUser.get('username');
     delete sentModel.attributes.id;
     delete sentModel.id;
     targetView.addTile(sentModel, true);

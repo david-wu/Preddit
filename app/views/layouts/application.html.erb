@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head authenticity_token="<%= form_authenticity_token %>">
-  <title>Wreddit</title>
+  <title>Pretty Reddit</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => false %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => false %>
   <%= csrf_meta_tags %>
 
 <!-- used for autocomplete -->
   <meta charset="utf-8">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
+
   <style>
   .ui-autocomplete-category {
     font-weight: bold;

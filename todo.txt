@@ -1,5 +1,6 @@
 clean up code
 list who tile is from
+feed/user navbar link persistance
 be able to resend tiles that you received
 
 
