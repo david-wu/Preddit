@@ -142,7 +142,20 @@ Wreddit.Views.Wall = Backbone.View.extend({
     return this;
   },
   _dragEvent: function(event, ui){
-    var sentModel = window.Wreddit.router.subs[ui.item[0].classList[0]].collection.get(ui.item[0].id);
+
+    var collection = ''
+    if(window.Wreddit.router.subs[ui.item.context.getAttribute('wall-name')]){
+      collection = window.Wreddit.router.subs[ui.item.context.getAttribute('wall-name')].collection
+    }else{
+      collection = window.Wreddit.router.feeds[ui.item.context.getAttribute('wall-name')].collection
+    }
+    if(!collection){
+      collection = window.Wreddit.router.feeds[ui.item.context.get('class')].collection
+    }
+    var sentModel = collection.get(ui.item[0].id);
+
+    // var sentModel = window.Wreddit.router.subs[ui.item[0].classList[0]].collection.get(ui.item[0].id);
+    // var sentModel = window.Wreddit.router.subs[ui.item.context.get('class')].collection.get(ui.item[0].id);
     var targetName = event.toElement.firstChild.data
     var targetView = window.Wreddit.router.feeds[event.toElement.firstChild.data].view;
 
