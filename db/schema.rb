@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140528175039) do
+ActiveRecord::Schema.define(version: 20140604060100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,21 @@ ActiveRecord::Schema.define(version: 20140528175039) do
     t.integer  "userId"
     t.string   "name"
     t.string   "vanity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "open_walls", force: true do |t|
+    t.integer  "user_id"
+    t.string   "wall_name"
+    t.integer  "shareable_id"
+    t.string   "shareable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sub", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

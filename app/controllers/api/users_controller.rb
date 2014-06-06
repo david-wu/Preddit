@@ -19,7 +19,7 @@ class Api::UsersController < ApplicationController
   end
 
   def current
-    @user = User.find_by(session_token: params['sessionToken'])
+    @user = User.find_by!(session_token: params['sessionToken'])
     if @user
       render json: @user
     else
