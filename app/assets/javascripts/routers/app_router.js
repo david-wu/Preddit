@@ -11,7 +11,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$minorEl = options.minorEl;
     this.subs = {};
     this.feeds = {};
-    this._initializeSearchBar();
+    this.navBar = new NavBar();
   },
   routes: {
     "": "visitDefaultWall",
@@ -39,9 +39,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     feedName = this._formatWallName(feedName);
     if(!this.feeds[feedName]){
       this.feeds[feedName] = new Wall(feedName, 'feed')
-      this.feeds[feedName].view.render();
     }
     this._swapWall(this.feeds[feedName]);
+    this.feeds[feedName].view.render();
     this._refreshSession();
   },
   signUp: function () {
@@ -54,7 +54,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapView(this.newSessionView);
     this.newSessionView.render();
   },
-    editSettings: function () {
+  editSettings: function () {
     this.newSettingsView = new Wreddit.Views.Settings({})
     this._swapView(this.newSettingsView);
     this.newSettingsView.render();
@@ -86,45 +86,25 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     }
     Wreddit.Models.User.currentUser(document.cookie, function(response){
       if(response.id){
-        that.currentUser = new Wreddit.Models.User(response)
+        that.currentUser = new Wreddit.Models.User(response);
       }else{
-        console.log(response.statusText)
+        console.log("Not valid login");
       }
-      that._refreshNavBar(that.currentUser);
+      that.navBar.refreshNavBar(that.currentUser);
     })
-  },
-  _refreshNavBar: function (user){
-    this._refreshUsers();
-    if(user.id){
-      $('#current_user_in_nav_bar').html(user.get('username'));
-      $('#main-nav-dropdown').html('<li><a href="#f/'+user.get('username')+'">My Wall</a></li><li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li><li><a href="#viewAbout">About</a></li>');
-    }else{
-      $('#current_user_in_nav_bar').html("Account");
-      $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li><li class="divider"></li><li><a href="#viewAbout">About</a></li>');
-    }
-  },
-  _refreshUsers: function (){
-    var that = this;
-    this.users = new Wreddit.Collections.Users();
-    this.users.fetch({
-      success: function(users){
 
-        users.each(function(user){
-          var repeat = false;
-          for(var i = 0; i < that.data.length; i++){
-            if(that.data[i].label === user.get('username')){
-              repeat = true;
-            }
-          }
-          if(!repeat){
-            that.data.push({label: user.get('username'), category: "Users"})
-          }
-        })
-      },
-    });
+    _.each(Cookie.get('feeds').split(','), function(subName){
+      if(!that.feeds[subName]){
+        that.feeds[subName] = new Wall(subName, 'feed')
+      }
+    })
+    _.each(Cookie.get('subs').split(','), function(subName){
+      if(!that.subs[subName]){
+        that.subs[subName] = new Wall(subName, 'sub')
+      }
+    })
+
   },
-
-
 
   _swapWall: function (showWall){
     //hide all walls, then show showWall
@@ -152,7 +132,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $(window).scrollTop(showWall.lastPos);
 
     //call loadMore() until page is full
-    var attemptsLeft = 7;
+    var attemptsLeft = 4;
     function initialLoadMore () {
       attemptsLeft--;
       if (attemptsLeft <= 0 || $(document).height() > $(window).height()*1.5) {
@@ -161,7 +141,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
         showWall.view.loading = true;
         showWall.view.loadMore();
       }
-      window.setTimeout(initialLoadMore, 500)
+      window.setTimeout(initialLoadMore, 1000)
     }
     initialLoadMore();
   },
@@ -176,108 +156,5 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$rootEl.hide();
     this.$minorEl.html(view.$el);
   },
-  _initializeSearchBar: function(){
-    var that = this;
-    this.data = [
-      { label: "Funny", category: "Subreddits" },
-      { label: "Pics", category: "Subreddits" },
-      { label: "AskReddit", category: "Subreddits" },
-      { label: "IAmA", category: "Subreddits" },
-      { label: "News", category: "Subreddits" },
-      { label: "All", category: "Subreddits" },
-      { label: "TodayILearned", category: "Subreddits" },
-      { label: "worldNews", category: "Subreddits" },
-      { label: "Aww", category: "Subreddits" },
-      { label: "Gifs", category: "Subreddits" },
-      { label: "Videos", category: "Subreddits" },
-      { label: "ExplainLikeImFive", category: "Subreddits" },
-      { label: "Music", category: "Subreddits" },
-      { label: "Movies", category: "Subreddits" },
-      { label: "Sports", category: "Subreddits" },
-      { label: "Television", category: "Subreddits" },
-      { label: "Gaming", category: "Subreddits" },
-      { label: "Science", category: "Subreddits" },
-      { label: "EarthPorn", category: "Subreddits" },
-      { label: "AskScience", category: "Subreddits" },
-      { label: "Books", category: "Subreddits" },
-      { label: "UpliftingNews", category: "Subreddits" },
-      { label: "MildlyInteresting", category: "Subreddits" },
-      { label: "Sloths", category: "Subreddits" },
-      { label: "Cats", category: "Subreddits" },
-      { label: "Dogs", category: "Subreddits" },
-      { label: "InternetIsBeautiful", category: "Subreddits" },
-      { label: "GetMotivated", category: "Subreddits" },
-      { label: "Food", category: "Subreddits" },
-      { label: "NoSleep", category: "Subreddits" },
-      { label: "OldSchoolCool", category: "Subreddits" },
-      { label: "TwoXChromosomes", category: "Subreddits" },
-      { label: "LifeProTips", category: "Subreddits" },
-      { label: "Futurology", category: "Subreddits" },
-      { label: "WritingPrompts", category: "Subreddits" },
-      { label: "DataIsBeautiful", category: "Subreddits" },
-      { label: "listentothis", category: "Subreddits" },
-      { label: "DIY", category: "Subreddits" },
-      { label: "Jokes", category: "Subreddits" },
-      { label: "Showerthoughts", category: "Subreddits" },
-      { label: "Art", category: "Subreddits" },
-      { label: "Gadgets", category: "Subreddits" },
-      { label: "PersonalFinance", category: "Subreddits" },
-      { label: "History", category: "Subreddits" },
-      { label: "Philosophy", category: "Subreddits" },
-      { label: "Fitness", category: "Subreddits" },
-      { label: "Tifu", category: "Subreddits" },
-      { label: "Space", category: "Subreddits" },
-      { label: "PhotoshopBattles", category: "Subreddits" },
-      { label: "Documentaries", category: "Subreddits" },
-      { label: "Creepy", category: "Subreddits" },
-      { label: "NotTheOnion", category: "Subreddits" },
-      { label: "WoahDude", category: "Subreddits" },
-      { label: "Unexpected", category: "Subreddits" },
-      { label: "ReactionGifs", category: "Subreddits" },
-      { label: "FirstWorldAnarchists", category: "Subreddits" },
-      { label: "FoodPorn", category: "Subreddits" },
-      { label: "HistoryPorn", category: "Subreddits" },
-      { label: "AdviceAnimals", category: "Subreddits" },
-      { label: "WTF", category: "Subreddits" },
-      { label: "LeagueOfLegends", category: "Subreddits" },
-      { label: "TrollXChromosomes", category: "Subreddits" },
-      { label: "DotA2", category: "Subreddits" },
-      { label: "PcMasterRace", category: "Subreddits" },
-      { label: "Pokemon", category: "Subreddits" },
-      { label: "Trees", category: "Subreddits" },
-      { label: "4chan", category: "Subreddits" },
-      { label: "GameOfThrones", category: "Subreddits" },
-    ];
 
-    $(document).ready(function(){
-
-      $('#subreddit-field').keypress(function (event){
-        if(event.which === 13){
-          event.preventDefault();
-          var input = $('#subreddit-field').val();
-          var isUser = false;
-          for(var i = 0; i < that.data.length; i++){
-            if(that.data[i].category === 'Users' && that.data[i].label === input){
-              isUser = true;
-            }
-          }
-          if(isUser){
-            Wreddit.router.navigate('#f/'+$('#subreddit-field').val(), {trigger: true})
-          }else{
-            Wreddit.router.navigate('#r/'+$('#subreddit-field').val(), {trigger: true})
-          }
-          $('#subreddit-field').val('');
-        }
-      })
-
-      $( "#subreddit-field" ).catcomplete({
-        delay: 0,
-        source: that.data,
-        autoFocus: true,
-      });
-
-      $('.ui-autocomplete.ui-front').css("zIndex", 10000);
-
-    })
-  },
 })
