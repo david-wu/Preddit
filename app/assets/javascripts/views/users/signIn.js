@@ -22,7 +22,7 @@ Wreddit.Views.SignIn = Backbone.View.extend({
       if(response.session_token){
         Wreddit.router.session_token = response.session_token;
         document.cookie = "sessionToken="+response.session_token+"; expires=Thu, 18 Dec 3000 12:00:00 GMT; path=/";
-        Wreddit.router._refreshNavBar(new Wreddit.Models.User(response));
+        Wreddit.router.navBar.refreshNavBar(new Wreddit.Models.User(response));
         Wreddit.router.navigate('#f/'+response.username, {trigger: true});
       }else{
         $('#sign-in-form-errors').html(' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><div class="alert alert-danger alert-dismissable">Incorect Login</div>');

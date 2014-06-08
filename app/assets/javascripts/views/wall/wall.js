@@ -156,6 +156,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
 
     // var sentModel = window.Wreddit.router.subs[ui.item[0].classList[0]].collection.get(ui.item[0].id);
     // var sentModel = window.Wreddit.router.subs[ui.item.context.get('class')].collection.get(ui.item[0].id);
+
     var targetName = event.toElement.firstChild.data
     var targetView = window.Wreddit.router.feeds[event.toElement.firstChild.data].view;
 

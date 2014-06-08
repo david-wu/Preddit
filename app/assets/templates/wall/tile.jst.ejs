@@ -1,6 +1,7 @@
 <!--A hidden tile that shows and appends itself-->
 
-<div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> tile panel panel-primary">
+<div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> tile panel panel-primary glow">
+
 
   <button type="button" class="close tile-closer" aria-hidden="true">&times;</button>
   <a class='tile-comment-link' href="http://www.reddit.com<%= tile.get('permalink')%>">
@@ -21,7 +22,9 @@
         <img id='<%=tile.cid%>' class='tile-image' src='<%= tile.get('imgSrc') %>'>
       </a>
     <% } %>
+
   </div>
+</div>
 
   <!-- bare image modal -->
   <div class="modal fade" id="<%= tile.cid%>-<%=wallName%>-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -80,19 +83,6 @@
   </div>
 
 
-
-
-
-
-
-
-
-
-
-    <script>
-      // $().css(padding-top, 70px)
-    </script>
-
   <script>
   if(<%=!stealthAdd%>){
     $('#<%=tile.cid%>').hide();
@@ -119,8 +109,6 @@
   }
   </script>
 
-
-</div>
 
 
 

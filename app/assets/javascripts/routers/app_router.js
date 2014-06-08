@@ -34,6 +34,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapWall(this.subs[subName]);
     this.subs[subName].view.render();
     this._refreshSession();
+    $('#subreddit-field').focus()
   },
   visitFeed: function(feedName){
     feedName = this._formatWallName(feedName);
@@ -43,40 +44,48 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapWall(this.feeds[feedName]);
     this.feeds[feedName].view.render();
     this._refreshSession();
+    $('#subreddit-field').focus()
   },
   signUp: function () {
     this.newUserView = new Wreddit.Views.SignUp({})
     this._swapView(this.newUserView);
     this.newUserView.render();
+    $('#username-field').focus()
   },
   signIn: function () {
     this.newSessionView = new Wreddit.Views.SignIn({})
     this._swapView(this.newSessionView);
     this.newSessionView.render();
+    $('#username-field').focus()
   },
   editSettings: function () {
     this.newSettingsView = new Wreddit.Views.Settings({})
     this._swapView(this.newSettingsView);
     this.newSettingsView.render();
+    $('#email-input').focus()
   },
   viewAbout: function () {
     this.aboutView = new Wreddit.Views.About({})
     this._swapView(this.aboutView);
     this.aboutView.render();
+    $('#subreddit-field').focus()
   },
   signOut: function () {
-    document.cookie =
-    "sessionToken=a; expires=Thu, 18 Dec 2000 12:00:00 GMT; path=/";
+    // document.cookie =
+    // "sessionToken=a; expires=Thu, 18 Dec 2000 12:00:00 GMT; path=/";
     this.currentUser = new Wreddit.Models.User();
-    this._refreshNavBar(this.currentUser);
+    this.navBar.refreshNavBar(this.currentUser);
     this.$rootEl.html('');
     this.$minorEl.html('');
-    Cookie.delete('walls');
     $('#allWall-links').html('')
     $('#allFeed-links').html('')
     this.subs = {};
     this.feeds = {};
+    Cookie.delete('sessionToken')
+    Cookie.delete('subs')
+    Cookie.delete('feeds')
     this.navigate('#newSession', {trigger:true});
+    $('#username-field').focus()
   },
 
   _refreshSession: function (){
@@ -93,16 +102,20 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       that.navBar.refreshNavBar(that.currentUser);
     })
 
-    _.each(Cookie.get('feeds').split(','), function(subName){
-      if(!that.feeds[subName]){
-        that.feeds[subName] = new Wall(subName, 'feed')
-      }
-    })
-    _.each(Cookie.get('subs').split(','), function(subName){
-      if(!that.subs[subName]){
-        that.subs[subName] = new Wall(subName, 'sub')
-      }
-    })
+    if(Cookie.get('feeds')){
+      _.each(Cookie.get('feeds').split(','), function(subName){
+        if(!that.feeds[subName]){
+          that.feeds[subName] = new Wall(subName, 'feed')
+        }
+      })
+    }
+    if(Cookie.get('subs')){
+      _.each(Cookie.get('subs').split(','), function(subName){
+        if(!that.subs[subName]){
+          that.subs[subName] = new Wall(subName, 'sub')
+        }
+      })
+    }
 
   },
 
