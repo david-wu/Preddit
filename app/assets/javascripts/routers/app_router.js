@@ -1,8 +1,8 @@
 Wreddit.Routers.Tiles = Backbone.Router.extend({
 
   _formatWallName: function (name){
-    name = name.toLowerCase();
-    name = name[0].toUpperCase() + name.slice(1);
+    // name = name.toLowerCase();
+    // name = name[0].toUpperCase() + name.slice(1);
     return name;
   },
 
@@ -37,7 +37,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $('#subreddit-field').focus()
   },
   visitFeed: function(feedName){
-    feedName = this._formatWallName(feedName);
+    // feedName = this._formatWallName(feedName);
     if(!this.feeds[feedName]){
       this.feeds[feedName] = new Wall(feedName, 'feed')
     }
