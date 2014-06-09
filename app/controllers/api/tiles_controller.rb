@@ -3,8 +3,10 @@ class Api::TilesController < ApplicationController
     @tile = Tile.new(tile_params)
     @user = User.find_by(username: params['target_name'])
     @tile.user_id = @user.id
-    @tile.sender_id = Integer(params['sender_id'])
-    @tile.sender_name = User.find(@tile.sender_id).username
+    if params['sender_id']
+      @tile.sender_id = Integer(params['sender_id'])
+      @tile.sender_name = User.find(@tile.sender_id).username
+    end
 
     if @tile.save
       render json: { tile: @tile }

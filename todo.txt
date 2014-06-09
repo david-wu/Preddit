@@ -1,20 +1,24 @@
 x should only show up when you're on your page
-persistant friends
+
+images sent to feed first should load first
+
+instructions
+buzz out on failure
+pop on success
+
+
+persistant friends in database
 option to not display NSFW content
 performance
-be able to resend tiles from feeds
 
 clean up code
-instructions
 
 buck- sign in with facebook
   provide a link that automatically friends them
-    first persistant friends
+    persistant friends
 
-list who tile is from
 feed/user navbar link persistance
 be able to resend tiles that you received
-
 
 put in close buttons
 
