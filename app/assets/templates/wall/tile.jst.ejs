@@ -1,5 +1,7 @@
 <!--A hidden tile that shows and appends itself-->
 
+<% if(!tile.get('over_18') || Wreddit.router.currentUser.get('permitNsfw')){%>
+
 <div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> tile panel panel-primary glow">
 
 
@@ -110,5 +112,4 @@
   </script>
 
 
-
-
+<%}%>

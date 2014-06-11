@@ -63,13 +63,21 @@ Wreddit.Views.Wall = Backbone.View.extend({
     $('.wall.'+this.wallName).sortable({
       items: ".tile",
       tolerance: 'pointer',
-      connectWith: "nav-bar-feed-link.wall-link.feed.ui-sortable",
+      connectWith: "nav-bar-feed-link.ui-sortable",
       placeholder: '#nothing',
       distance: 5,
       start: function(event, ui) {
 
+        // $("#"+event.toElement.id).css('outline', 'solid 20px')
+        // $("#"+event.toElement.id).css('position', 'absolute')
+        // $("#"+event.toElement.id).css('z-index', 1000)
+        //
+        // $(".nav-bar-feed-link").css('background-color', 'green')
+        // $(".nav-bar-feed-link").css('position', 'absolute')
+        // $(".nav-bar-feed-link").css('z-index', 999999999999999999999999999999999)
 
-        // that.temp.tempWallLinks = $('#allWall-links').html()
+
+        // hide non-feeds
         $('#allWall-links').animate({
           opacity: 0,
         }, 100)
@@ -79,18 +87,18 @@ Wreddit.Views.Wall = Backbone.View.extend({
         $('#nav-bar-dropdown-menu').animate({
           opacity: 0,
         }, 100)
-        $('.nav-bar-feed-link.wall-link.feed').animate({
+
+        $('.nav-bar-feed-link').css({
           position: 'relative',
           top: 150,
-          'font-size': 75,
+          'font-size': 40,
           margin: 75,
+          'line-height': 'normal',
         }, 100)
         $('#main-navbar').animate({
           height: '100%'
         }, 100)
-        $('.nav-bar-feed-link.wall-link.sub.ui-sortable').animate({
-          display: 'none',
-        })
+
 
 
       },
@@ -100,7 +108,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
       stop: function (event, ui) {
         event.preventDefault();
 
-        // $('#allWall-links').html(that.temp.tempWallLinks)
+        // show non-feeds
         $('#allWall-links').animate({
           opacity: 1,
         }, 400)
@@ -110,7 +118,8 @@ Wreddit.Views.Wall = Backbone.View.extend({
         $('#nav-bar-dropdown-menu').animate({
           opacity: 1,
         }, 400)
-        $('.nav-bar-feed-link.wall-link.feed').animate({
+
+        $('.nav-bar-feed-link').animate({
           position: 'relative',
           top: 0,
           'font-size': 14,
@@ -119,6 +128,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
         $('#main-navbar').animate({
           height: 50,
         }, 400)
+
         that._dragEvent(event, ui);
       },
     })

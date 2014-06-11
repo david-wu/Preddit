@@ -28,4 +28,11 @@ class User < ActiveRecord::Base
       self.session_token = SecureRandom.urlsafe_base64(16)
       self.save!
     end
+
+    def permissions=(permits)
+      permits.each do |permit|
+        p (permit+'=').to_sym
+        self.send((permit+'=').to_sym, true)
+      end
+    end
 end

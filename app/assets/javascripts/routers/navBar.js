@@ -17,10 +17,13 @@ NavBar.prototype.appendWall = function(wallName, type){
     var typeId = 'f/'
     var appendOrPrepend = 'prepend'
   }
-  $parentOfLinkToWall[appendOrPrepend]('<li id=_link'+wallName+
-  '><a href="#'+typeId+wallName+'" class="nav-bar-feed-link wall-link '+type+
-  '">'+wallName+'</a></li>');
+  $parentOfLinkToWall[appendOrPrepend](
+
+    '<li id=_link'+wallName+
+  ' class="nav-bar-'+type+
+  '-link ui-sortable"><a href="#'+typeId+wallName+'" class="wall-link">'+wallName+'</a></li>');
   this.$navBarEls[wallName] = $('#_link'+wallName);
+  return $('#_link'+wallName);
 }
 
 NavBar.prototype.refreshNavBar = function (user){
@@ -33,6 +36,8 @@ NavBar.prototype.refreshNavBar = function (user){
     $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li><li class="divider"></li><li><a href="#viewAbout">About</a></li>');
   }
 }
+
+
 
 NavBar.prototype.refreshUsers = function (){
   var that = this;

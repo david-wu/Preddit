@@ -30,6 +30,18 @@ Cookie.add = function(key, value){
   Cookie.set(key, cookieSub.join(','));
 }
 
+Cookie.remove = function(key, value){
+  if (Cookie.get(key)){
+    var cookieSub = Cookie.get(key).split(',');
+  }else{
+    var cookieSub = [];
+  }
+  if(cookieSub.indexOf(value) !== -1){
+    cookieSub.splice(cookieSub.indexOf(value), 1)
+  }
+  Cookie.set(key, cookieSub.join(','));
+}
+
 Cookie.delete = function(key){
   document.cookie = key+"=; expires=Thu, 18 Dec 2000 12:00:00 GMT";
   return document.cookie;

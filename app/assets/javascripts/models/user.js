@@ -1,5 +1,5 @@
 Wreddit.Models.User = Backbone.Model.extend({
-  url: "/api/users",
+  urlRoot: "/api/users",
   signIn: function (callback){
     $.ajax({
       type: "POST",

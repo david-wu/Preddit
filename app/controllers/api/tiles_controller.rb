@@ -16,7 +16,7 @@ class Api::TilesController < ApplicationController
   end
 
   def tile_params
-    params.permit('title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit')
+    params.permit('title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
   end
 
   def show

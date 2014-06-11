@@ -27,15 +27,16 @@ a:hover {
     top: 40px;
     position: relative;
 }
-.nav-bar-feed-link.wall-link{
+.wall-link{
   color: #369 !important;
   font: normal verdana,arial,helvetica,sans-serif;
   font-weight: bold;
   float: left;
-}
-#nothing {
+
 }
 
+#nothing {
+}
 
 body {
   padding-top: 70px;
@@ -50,6 +51,7 @@ body {
 .tile-image {
     width: 348px;
     height: auto;
+    padding: 2px;
 }
 a.tile-comment-link{
   float:right;

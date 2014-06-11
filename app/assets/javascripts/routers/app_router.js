@@ -33,7 +33,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapWall(this.subs[subName]);
     this.subs[subName].view.render();
     this._refreshSession();
-    $('#subreddit-field').focus()
+    $('#subreddit-field').focus();
   },
   visitFeed: function(feedName){
     if(!this.feeds[feedName]){
@@ -42,31 +42,35 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._swapWall(this.feeds[feedName]);
     this.feeds[feedName].view.render();
     this._refreshSession();
-    $('#subreddit-field').focus()
+    $('#subreddit-field').focus();
   },
   signUp: function () {
     this.newUserView = new Wreddit.Views.SignUp({})
     this._swapView(this.newUserView);
     this.newUserView.render();
-    $('#username-field').focus()
+    this._refreshSession();
+    $('#username-field').focus();
   },
   signIn: function () {
     this.newSessionView = new Wreddit.Views.SignIn({})
     this._swapView(this.newSessionView);
     this.newSessionView.render();
-    $('#username-field').focus()
+    this._refreshSession();
+    $('#username-field').focus();
   },
   editSettings: function () {
     this.newSettingsView = new Wreddit.Views.Settings({})
     this._swapView(this.newSettingsView);
     this.newSettingsView.render();
-    $('#email-input').focus()
+    this._refreshSession();
+    $('#email-input').focus();
   },
   viewAbout: function () {
     this.aboutView = new Wreddit.Views.About({})
     this._swapView(this.aboutView);
     this.aboutView.render();
-    $('#subreddit-field').focus()
+    this._refreshSession();
+    $('#subreddit-field').focus();
   },
   signOut: function () {
     // document.cookie =
@@ -83,7 +87,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     Cookie.delete('subs')
     Cookie.delete('feeds')
     this.navigate('#newSession', {trigger:true});
-    $('#username-field').focus()
+    this._refreshSession();
+    $('#username-field').focus();
   },
 
   _refreshSession: function (){
