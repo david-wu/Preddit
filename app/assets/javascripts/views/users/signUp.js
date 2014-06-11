@@ -30,7 +30,6 @@ Wreddit.Views.SignUp = Backbone.View.extend({
         Wreddit.router.navigate('#f/'+attrs.user.username, {trigger: true})
       },
       error: function(model, response){
-        debugger
         $('#sign-up-form-errors').html(' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><div class="alert alert-danger alert-dismissable">Username already taken.</div>')
 
         // _.each(response.responseJSON.errors, function(error){
