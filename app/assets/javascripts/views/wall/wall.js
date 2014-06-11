@@ -71,7 +71,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
         // $("#"+event.toElement.id).css('outline', 'solid 20px')
         // $("#"+event.toElement.id).css('position', 'absolute')
         // $("#"+event.toElement.id).css('z-index', 1000)
-        //
+
         // $(".nav-bar-feed-link").css('background-color', 'green')
         // $(".nav-bar-feed-link").css('position', 'absolute')
         // $(".nav-bar-feed-link").css('z-index', 999999999999999999999999999999999)

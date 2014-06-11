@@ -14,7 +14,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   },
   routes: {
     "": "visitDefaultWall",
-    "r/:sub": "visitSubWall",
+    "r/:sub": "visitSub",
     "f/:feed": "visitFeed",
     "newUser": "signUp",
     "newSession": "signIn",
@@ -25,7 +25,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   visitDefaultWall: function(){
     Wreddit.router.navigate('#r/All', {trigger:true});
   },
-  visitSubWall: function(subName){
+  visitSub: function(subName){
     subName = this._formatWallName(subName);
     if(!this.subs[subName]){
       this.subs[subName] = new Wall(subName, 'sub')
@@ -124,7 +124,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
 
   _swapWall: function (showWall){
 
-    //remembers _currentWall's lastPos
+    //remembers wall's lastPos
     if(this._currentWall){
       this._currentWall.lastPos = $(window).scrollTop();
     }

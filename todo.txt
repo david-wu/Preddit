@@ -1,4 +1,5 @@
 x should only show up when you're on your page
+alerts that don't take up space
 
 images sent to feed first should load first
 
