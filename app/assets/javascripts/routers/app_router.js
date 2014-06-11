@@ -23,7 +23,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     "viewAbout": "viewAbout",
   },
   visitDefaultWall: function(){
-    Wreddit.router.navigate('#r/Aww', {trigger:true});
+    Wreddit.router.navigate('#r/All', {trigger:true});
   },
   visitSubWall: function(subName){
     subName = this._formatWallName(subName);
