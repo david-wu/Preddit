@@ -123,6 +123,12 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   },
 
   _swapWall: function (showWall){
+
+    //remembers _currentWall's lastPos
+    if(this._currentWall){
+      this._currentWall.lastPos = $(window).scrollTop();
+    }
+
     //hide all walls, then show showWall
     console.log("_swapWall("+showWall.name+")")
     this.$minorEl.hide();
@@ -141,9 +147,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     window[showWall.name + 'msnry'].options.transitionDuration = "0.4s";
 
     //moves screen position back to lastPos
-    if(this._currentWall){
-      this._currentWall.lastPos = $(window).scrollTop();
-    }
     this._currentWall = showWall;
     $(window).scrollTop(showWall.lastPos);
 
