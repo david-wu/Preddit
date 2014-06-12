@@ -18,6 +18,7 @@
 //= require backbone
 //= require jquery.serializeJSON
 //= require typeahead
+//= require shepherd
 //= require wreddit
 //= require_tree ./models
 //= require_tree ./collections
