@@ -1,0 +1,40 @@
+<script>
+if(!Cookie.get('sessionToken')){
+  tour = new Shepherd.Tour({
+    defaults: {
+      classes: 'shepherd-theme-arrows',
+    },
+  })
+
+  tour.addStep('1',
+  {
+    text: 'These are your open subreddits.  Use the Search Bar to open more',
+    attachTo: '#main-navbar bottom',
+    advanceOn: '.docs-link click',
+    showCancelLink: 'true',
+  })
+  tour.addStep('2',
+  {
+    text: 'Use this Search Bar to find and open Subreddits or User Feeds',
+    attachTo: '.nav.navbar-nav.navbar-right bottom',
+    advanceOn: '.docs-link click',
+    showCancelLink: 'true',
+  })
+  tour.addStep('3',
+  {
+    text: 'These are Tiles, Click and drag them onto opened User Feeds to share',
+    attachTo: '.tile bottom',
+    advanceOn: '.docs-link click',
+    showCancelLink: 'true',
+  })
+
+  tour.addStep('4',
+  {
+    text: 'Sign Up for an account here!',
+    attachTo: '#nav-bar-dropdown-menu bottom',
+    advanceOn: '.docs-link click',
+    showCancelLink: 'true',
+  })
+  tour.start()
+}
+</script>

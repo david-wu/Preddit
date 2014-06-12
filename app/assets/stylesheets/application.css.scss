@@ -15,6 +15,10 @@
  */
 @import "bootstrap";
 
+.shepherd-step {
+  z-index: 1000000000000;
+}
+
 a:hover {
   text-decoration:none
 }
