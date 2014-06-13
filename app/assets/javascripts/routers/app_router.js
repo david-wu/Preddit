@@ -11,6 +11,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.subs = {};
     this.feeds = {};
     this.navBar = new NavBar();
+
+    this.autoLoader = setInterval(function(){console.log('load')}, 1000);
   },
   routes: {
     "": "visitDefaultWall",
@@ -150,19 +152,34 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this._currentWall = showWall;
     $(window).scrollTop(showWall.lastPos);
 
-    //call loadMore() until page is full
-    var attemptsLeft = 4;
-    function initialLoadMore () {
-      attemptsLeft--;
-      if (attemptsLeft <= 0 || $(document).height() > $(window).height()*1.5) {
-        return false;
-      } else if(!showWall.view.loading){
+    // //call loadMore() until page is full
+    // var attemptsLeft = 4;
+    // function initialLoadMore () {
+    //   attemptsLeft--;
+    //   if (attemptsLeft <= 0 || $(document).height() > $(window).height()*1.5) {
+    //     return false;
+    //   } else if(!showWall.view.loading){
+    //     showWall.view.loading = true;
+    //     showWall.view.loadMore();
+    //   }
+    //   window.setTimeout(initialLoadMore, 1000)
+    // }
+    // initialLoadMore();
+
+    showWall.view.loading = true;
+    showWall.view.loadMore();
+    clearInterval(this.autoLoader);
+    this.autoLoader = setInterval(function(){
+      if (!showWall.view.loading && $(window).scrollTop() >= ( $(document).height() -
+      $(window).height()*2)){
         showWall.view.loading = true;
         showWall.view.loadMore();
       }
-      window.setTimeout(initialLoadMore, 1000)
-    }
-    initialLoadMore();
+      var allTiles = $('.tile');
+      if(allTiles.length > 300){
+        window[showWall.view.wallName + 'msnry'].remove($('.tile').slice(0,25));
+      }
+    }, 1000)
   },
 
   _swapView: function (view){

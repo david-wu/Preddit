@@ -200,20 +200,22 @@ Wreddit.Views.Wall = Backbone.View.extend({
       view: this,
     }))
 
-    // enable infinite scroll
-    $(window).scroll(function() {
-      if(Wreddit.router._currentWall.view === that){
-        if (!that.loading && $(window).scrollTop() >= ( $(document).height() -
-        $(window).height()*1.5)){
-          that.loading = true;
-          that.loadMore();
-        }
-        var allTiles = $('.tile');
-        if(allTiles.length > 300){
-          window[that.wallName + 'msnry'].remove($('.tile').slice(0,25));
-        }
-      }
-    });
+
+    // // enable infinite scroll
+    // $(window).scroll(function() {
+    //   if(Wreddit.router._currentWall.view === that){
+    //     if (!that.loading && $(window).scrollTop() >= ( $(document).height() -
+    //     $(window).height()*1.5)){
+    //       that.loading = true;
+    //       that.loadMore();
+    //     }
+    //     var allTiles = $('.tile');
+    //     if(allTiles.length > 300){
+    //       window[that.wallName + 'msnry'].remove($('.tile').slice(0,25));
+    //     }
+    //   }
+    // });
+
 
   },
 })
