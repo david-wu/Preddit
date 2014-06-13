@@ -180,10 +180,8 @@ Wreddit.Views.Wall = Backbone.View.extend({
 
     sentModel.save([],{
       success: function(model, response){
-        console.log(response.tile)
       },
       error: function(model, response){
-        console.log(response)
       }
     });
 

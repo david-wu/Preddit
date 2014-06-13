@@ -27,7 +27,22 @@ Wreddit.Views.SignUp = Backbone.View.extend({
         document.cookie =
         "sessionToken="+response.token+"; expires=Thu, 18 Dec 3000 12:00:00 GMT; path=/";
         Wreddit.router.navBar.refreshNavBar(new Wreddit.Models.User(response.user));
+
+        var tile = new Wreddit.Models.Tile({
+          title: "Welcome To Preddit!  Use the Search Bar to open content or find users.  You can click and drag tiles to share them with other users.",
+          user_id: response.user.id,
+          imgSrc: 'assets/welcome.gif',
+          url: '#',
+          author: 'Preddit',
+          domain: "preddit.io",
+          permalink: '#',
+          over_18: 'false',
+        })
+        tile.save()
+
         Wreddit.router.navigate('#f/'+attrs.user.username, {trigger: true})
+
+
       },
       error: function(model, response){
         $('#sign-up-form-errors').html(' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><div class="alert alert-danger alert-dismissable">Username already taken.</div>')

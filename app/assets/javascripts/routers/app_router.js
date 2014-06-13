@@ -12,7 +12,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.feeds = {};
     this.navBar = new NavBar();
 
-    this.autoLoader = setInterval(function(){console.log('load')}, 1000);
   },
   routes: {
     "": "visitDefaultWall",

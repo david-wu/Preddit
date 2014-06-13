@@ -1,8 +1,11 @@
 class Api::TilesController < ApplicationController
   def create
     @tile = Tile.new(tile_params)
-    @user = User.find_by(username: params['target_name'])
-    @tile.user_id = @user.id
+    if(params['target_name'])
+      @user = User.find_by(username: params['target_name'])
+      @tile.user_id = @user.id
+    end
+
     if params['sender_id']
       @tile.sender_id = Integer(params['sender_id'])
       @tile.sender_name = User.find(@tile.sender_id).username
@@ -16,7 +19,7 @@ class Api::TilesController < ApplicationController
   end
 
   def tile_params
-    params.permit('title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
+    params.permit('user_id', 'title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
   end
 
   def show
