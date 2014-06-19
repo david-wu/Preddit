@@ -1,15 +1,26 @@
-<div class="col-xs-4">
-<form id='update-user-form' role="form">
-  <div class="checkbox">
-    <label>
-      <input name='user[permissions][]' type="checkbox" value="permitNsfw"
-      <% if(Wreddit.router.currentUser && Wreddit.router.currentUser.get('permitNsfw')) { %>
-        checked
-      <% } %>
-       >
-    Show Adult Content</label><br><br>
+<div class='container'>
+  <div class='row'>
+    <div class="col-sm-5">
+      <div class="jumbotron">
+        <h1>Settings</h1>
+        <p>Change your user settings here!</p>
+      </div>
+    </div>
+    <div class="col-sm-5"><br><br><br><br>
+      <form id='update-user-form' role="form">
+        <div class="checkbox">
+          <label>
+            <input name='user[permissions][]' type="checkbox" value="permitNsfw"
+            <% if(Wreddit.router.currentUser && Wreddit.router.currentUser.get('permitNsfw')) { %>
+              checked
+            <% } %>>
+          Show NSFW Content</label><br><br>
+        </div>
+        <button id="update-btn" type="submit" class="btn btn-success">
+          Submit
+        </button>
+      </form><br>
+      <div id='update-user-alerts'></div>
+    </div>
   </div>
-  <button id="update-btn" type="submit" class="btn btn-success">Submit</button>
-</form>
-<div id='update-user-alerts'></div>
 </div>

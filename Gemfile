@@ -8,7 +8,6 @@ end
 gem 'pg'
 gem 'bcrypt'
 
-
 gem 'backbone-on-rails'
 gem 'jquery-ui-rails'
 gem 'rails_12factor'

@@ -1,10 +1,5 @@
 Wreddit.Routers.Tiles = Backbone.Router.extend({
 
-  _formatWallName: function (name){
-    name = name.toLowerCase();
-    name = name[0].toUpperCase() + name.slice(1);
-    return name;
-  },
   initialize: function (options){
     this.$rootEl = options.rootEl;
     this.$minorEl = options.minorEl;
@@ -180,9 +175,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       }
     }, 1000)
   },
-
   _swapView: function (view){
     console.log("_swapView("+view+")")
+    clearInterval(this.autoLoader);
     if (this._currentView) {
       this._currentView.remove();
     }
@@ -191,5 +186,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$rootEl.hide();
     this.$minorEl.html(view.$el);
   },
-
+  _formatWallName: function (name){
+    name = name.toLowerCase();
+    name = name[0].toUpperCase() + name.slice(1);
+    return name;
+  },
 })

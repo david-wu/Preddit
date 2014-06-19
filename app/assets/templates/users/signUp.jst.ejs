@@ -1,60 +1,43 @@
-
 <div class="container">
   <div class="row">
-
-
-    <div class="col-xs-5">
+    <div class="col-sm-5">
       <div class="jumbotron">
         <h1>Sign Up!</h1>
-        <p>Use the search bar to add sub-reddits and other users.  Click and drag pictures onto users to send them a copy.</p>
+        <p>Use the search bar to open sub-reddits and user feeds.  Click and drag tiles onto users to share!</p>
       </div>
     </div>
-
-
-    <div class="col-xs-5">
-      <br><br>
+    <div class="col-sm-5"><br><br>
       <form id='form-to-sign-up' role="form">
-        <!-- <div class="form-group">
-          <label for="email-field">Email</label>
-          <input name='user[email]' type="text" class="form-control" id="email-field" placeholder="Email">
-        </div> -->
-
         <div class="form-group">
           <label for="username-field">Username</label>
           <input name='user[username]' type="text" class="form-control" id="username-field" placeholder="Username (case sensitive)">
         </div>
-
         <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input name='user[password]' type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <label for="inputPassword1">Password</label>
+          <input name='user[password]' type="password" class="form-control" id="inputPassword1" placeholder="Password">
         </div>
         <div class="form-group">
-          <label for="exampleInputPassword2">Confirm Password</label>
-          <input name='user[confirmPassword]' type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+          <label for="inputPassword2">Confirm Password</label>
+          <input name='user[confirmPassword]' type="password" class="form-control" id="inputPassword2" placeholder="Password">
         </div>
-
-
-          <label>
-            <input name='user[permissions][]' type="checkbox" value="permitNsfw">
-          Show Adult Content</label>  <br><br>
-
-
-        <button id='sign-up-btn' type='button' class="btn btn-success">Sign up</button>
+        <label>
+          <input name='user[permissions][]' type="checkbox" value="permitNsfw">
+          Show NSFW Content
+        </label><br><br>
+        <button id='sign-up-btn' type='button' class="btn btn-success">
+          Sign up
+        </button>
       </form><br>
-      <div id="sign-up-form-errors"></div>
+    <div id="sign-up-form-errors"></div>
     </div>
-
-
-
   </div>
 </div>
 <script>
-$('form#form-to-sign-up').keypress( function( e ) {
-  var code = e.keyCode || e.which;
-
-  if( code === 13 ) {
-    $('#sign-up-btn').click();
-    return false;
-  }
-})
+  $('form#form-to-sign-up').keypress( function( e ) {
+    var code = e.keyCode || e.which;
+    if( code === 13 ) {
+      $('#sign-up-btn').click();
+      return false;
+    }
+  })
 </script>
