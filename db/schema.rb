@@ -24,21 +24,6 @@ ActiveRecord::Schema.define(version: 20140609180149) do
     t.datetime "updated_at"
   end
 
-  create_table "open_walls", force: true do |t|
-    t.integer  "user_id"
-    t.string   "wall_name"
-    t.integer  "shareable_id"
-    t.string   "shareable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "sub", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "tiles", force: true do |t|
     t.integer  "user_id"
     t.integer  "sender_id"
