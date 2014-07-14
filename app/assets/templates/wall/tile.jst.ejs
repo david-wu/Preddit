@@ -3,8 +3,6 @@
 <% if( !tile.get('over_18') || Wreddit.router.currentUser.get('permitNsfw')){%>
 
 <div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> tile panel panel-primary glow">
-
-
   <button type="button" class="close tile-closer" aria-hidden="true">&times;</button>
   <a class='tile-comment-link' href="http://www.reddit.com<%= tile.get('permalink')%>">
     <span class="glyphicon glyphicon-comment"></span>
@@ -12,7 +10,6 @@
   <a class="tile-title-text" id='<%=tile.cid%>' href='<%= tile.get('url') %>'>
     <%=tile.get('title')%>
   </a>
-
   <% if(tile.get('sender_name')){ %>
   <br>From: <a href="#/f/<%=tile.get('sender_name')%>"><%=tile.get('sender_name')%></a>
   <% } %>
