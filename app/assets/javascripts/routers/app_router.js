@@ -6,7 +6,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.subs = {};
     this.feeds = {};
     this.navBar = new NavBar();
-
   },
   routes: {
     "": "visitDefaultWall",
