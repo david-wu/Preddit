@@ -5,7 +5,7 @@ var NavBar = function(){
  this.$subEl = $('#allWall-links');
  this.$navBarEls = {};
  this._initializeSearchBar();
-}
+};
 
 NavBar.prototype.appendWall = function(wallName, type){
   if (type === 'sub'){
@@ -37,8 +37,6 @@ NavBar.prototype.refreshNavBar = function (user){
   }
 }
 
-
-
 NavBar.prototype.refreshUsers = function (){
   var that = this;
   this.users = new Wreddit.Collections.Users();
@@ -59,7 +57,6 @@ NavBar.prototype.refreshUsers = function (){
     },
   });
 }
-
 
 NavBar.prototype._initializeSearchBar = function(){
   var that = this;

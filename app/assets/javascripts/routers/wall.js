@@ -13,7 +13,7 @@ var Wall = function (wallName, type) {
 
   $('#allWalls').append(this.view.$el);
 
-  this.$navBarEl = Wreddit.router.navBar.appendWall(wallName, type);
+  // this.$navBarEl = Wreddit.router.navBar.appendWall(wallName, type);
 }
 
 Wall.prototype.remove = function(){

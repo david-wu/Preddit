@@ -4,12 +4,7 @@ window.Wreddit = {
   Views: {},
   Routers: {},
   initialize: function() {
-    var $rootEl = $('#allWalls')
-    var $minorEl = $('#allOthers')
-    Wreddit.router = new Wreddit.Routers.Tiles({
-      rootEl: $rootEl,
-      minorEl: $minorEl,
-    });
+    Wreddit.router = new Wreddit.Routers.Tiles();
     Backbone.history.start();
   }
 };

@@ -68,15 +68,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
       distance: 5,
       start: function(event, ui) {
 
-        // $("#"+event.toElement.id).css('outline', 'solid 20px')
-        // $("#"+event.toElement.id).css('position', 'absolute')
-        // $("#"+event.toElement.id).css('z-index', 1000)
-
-        // $(".nav-bar-feed-link").css('background-color', 'green')
-        // $(".nav-bar-feed-link").css('position', 'absolute')
-        // $(".nav-bar-feed-link").css('z-index', 999999999999999999999999999999999)
-
-
         // hide non-feeds
         $('#allWall-links').animate({
           opacity: 0,
@@ -98,8 +89,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
         $('#main-navbar').animate({
           height: '100%'
         }, 100)
-
-
 
       },
       receive: function(event, ui) {
@@ -197,23 +186,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
       wallName: this.wallName,
       view: this,
     }))
-
-
-    // // enable infinite scroll
-    // $(window).scroll(function() {
-    //   if(Wreddit.router._currentWall.view === that){
-    //     if (!that.loading && $(window).scrollTop() >= ( $(document).height() -
-    //     $(window).height()*1.5)){
-    //       that.loading = true;
-    //       that.loadMore();
-    //     }
-    //     var allTiles = $('.tile');
-    //     if(allTiles.length > 300){
-    //       window[that.wallName + 'msnry'].remove($('.tile').slice(0,25));
-    //     }
-    //   }
-    // });
-
 
   },
 })
