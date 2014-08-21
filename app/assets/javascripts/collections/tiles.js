@@ -12,9 +12,9 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
     var imgDomains = ['imgur.com', 'm.imgur.com', 'i.imgur.com']
     var badDomain = ['/a/', '/gallery', '/album/']
 
-    console.log("http://www.reddit.com/r/"+subrs+".json?limit=15&after="+this.lastTile+"&jsonp=?")
+    console.log("http://www.reddit.com/r/"+subrs+".json?limit=25&after="+this.lastTile+"&jsonp=?")
 
-    $.getJSON("http://www.reddit.com/r/"+subrs+".json?limit=15&after="+this.lastTile+"&jsonp=?",
+    $.getJSON("http://www.reddit.com/r/"+subrs+".json?limit=25&after="+this.lastTile+"&jsonp=?",
       function (data){
         var newTiles = [];
         $.each(data.data.children.slice(0, 25),

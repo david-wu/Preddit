@@ -1,13 +1,47 @@
 Wreddit.Routers.Tiles = Backbone.Router.extend({
 
   initialize: function (options){
-    this.$allWalls = $('#allWalls');
+    var that = this;
+    this.$allWalls = $('#wall');
     this.$minorEl = $('#allOthers');
     this.$navBar = $('#navBar');
     this.subs = {};
     this.feeds = {};
     this.navBar = new Wreddit.Views.NavBar();
     this.$navBar.html(this.navBar.render().$el);
+
+    this.mason = new Masonry( '#wall', {
+     columnWidth: 360,
+     transitionDuration: 0,
+     isFitWidth: true,
+     // isOriginTop: false
+    });
+    this.mason.on('layoutComplete', function(msn, laidOutItems){
+      console.log(laidOutItems)
+    })
+
+    // limits rate layout is refreshed at
+    this.masonTempTiles = [];
+    this.mason.layoutLimited = function(tile){
+      that.masonTempTiles.push(tile)
+      clearTimeout(that.masonTimeout); 
+      that.masonTimeout = setTimeout(function(){
+        for (var i = 0; i < that.masonTempTiles.length; i++){
+          that.masonTempTiles[i].show();
+        }
+        that.masonTempTiles = [];
+        that.mason.layout();
+        console.log('layout');
+      }, 200);
+    }
+
+    // $('#wall').append('<div class="pan">asdf</div>')
+    // $('#wall').append('<div class="pan">aswerdf</div>')
+    // $('#wall').append('<div class="pan">astredf</div>')
+    // $('#wall').append('<div class="pan">asrtydf</div>')
+    // this.mason.appended(document.getElementsByClassName('pan'))
+    // this.mason.options.transitionDuration = 0.4;
+
   },
   routes: {
     "": "visitDefaultWall",
@@ -25,11 +59,15 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   visitSub: function(subName){
     subName = this.formatWallName(subName);
     if(!this.subs[subName]){
-      this.subs[subName] = new Wall(subName, 'sub')
+      this.subs[subName] = new Wreddit.Views.Wall({
+        wallName: subName,
+        type: 'sub',
+        mason: this.mason,
+      })
     }
     this._swapWall(this.subs[subName]);
-    this.subs[subName].view.render();
-    this._refreshSession();
+    this.subs[subName].render();
+    // this._refreshSession();
     $('#subreddit-field').focus();
   },
   visitFeed: function(feedName){
@@ -38,7 +76,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this.feeds[feedName] = new Wall(feedName, 'feed')
     }
     this._swapWall(this.feeds[feedName]);
-    this.feeds[feedName].view.render();
+    this.feeds[feedName].render();
     this._refreshSession();
     $('#subreddit-field').focus();
   },
@@ -101,64 +139,63 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     })
 
     // replace this with api
-    if(Cookie.get('feeds')){
-      _.each(Cookie.get('feeds').split(','), function(subName){
-        if(!that.feeds[subName]){
-          that.feeds[subName] = new Wall(subName, 'feed')
-        }
-      })
-    }
-    if(Cookie.get('subs')){
-      _.each(Cookie.get('subs').split(','), function(subName){
-        if(!that.subs[subName]){
-          that.subs[subName] = new Wall(subName, 'sub')
-        }
-      })
-    }
+    // if(Cookie.get('feeds')){
+    //   _.each(Cookie.get('feeds').split(','), function(subName){
+    //     if(!that.feeds[subName]){
+    //       that.feeds[subName] = new Wreddit.Views.Feed(subName, 'feed')
+    //     }
+    //   })
+    // }
+    // if(Cookie.get('subs')){
+    //   _.each(Cookie.get('subs').split(','), function(subName){
+    //     if(!that.subs[subName]){
+    //       that.subs[subName] = new Wreddit.Views.Wall(subName, 'sub')
+    //     }
+    //   })
+    // }
 
   },
 
   _swapWall: function (showWall){
-
+    var that = this;
     //remembers wall's lastPos
     if(this._currentWall){
       this._currentWall.lastPos = $(window).scrollTop();
     }
 
     //hide all walls, then show showWall
-    console.log("_swapWall("+showWall.name+")")
-    this.$minorEl.hide();
-    this.$allWalls.show();
-    subsArr = Object.keys(this.subs);
-    for(var $i = 0; $i < subsArr.length; $i++){
-      this.subs[subsArr[$i]].view.$el.hide();
-    }
-    feedsArr = Object.keys(this.feeds);
-    for(var $i = 0; $i < feedsArr.length; $i++){
-      this.feeds[feedsArr[$i]].view.$el.hide();
-    }
-    showWall.view.$el.show();
-    window[showWall.name + 'msnry'].options.transitionDuration = 0;
-    window[showWall.name + 'msnry'].layout();
-    window[showWall.name + 'msnry'].options.transitionDuration = "0.4s";
+    // console.log("_swapWall("+showWall.name+")")
+    // this.$minorEl.hide();
+    // this.$allWalls.show();
+    // subsArr = Object.keys(this.subs);
+    // for(var $i = 0; $i < subsArr.length; $i++){
+    //   this.subs[subsArr[$i]].$el.hide();
+    // }
+    // feedsArr = Object.keys(this.feeds);
+    // for(var $i = 0; $i < feedsArr.length; $i++){
+    //   this.feeds[feedsArr[$i]].$el.hide();
+    // }
+
+    // showWall.$el.show();
+    // this.mason.layout();
 
     //moves screen position back to lastPos
     this._currentWall = showWall;
     $(window).scrollTop(showWall.lastPos);
 
     // reset autoLoader
-    showWall.view.loading = true;
-    showWall.view.loadMore();
+    showWall.loading = true;
+    showWall.loadMore();
     clearInterval(this.autoLoader);
     this.autoLoader = setInterval(function(){
-      if (!showWall.view.loading && $(window).scrollTop() >= ( $(document).height() -
-      $(window).height()*2)){
-        showWall.view.loading = true;
-        showWall.view.loadMore();
+      if (!showWall.loading && $(window).scrollTop() >= ( $(document).height() -
+      $(window).height()*4)){
+        showWall.loading = true;
+        showWall.loadMore();
       }
       var allTiles = $('.tile');
-      if(allTiles.length > 300){
-        window[showWall.view.wallName + 'msnry'].remove($('.tile').slice(0,25));
+      if(allTiles.length > 50){
+        that.mason.remove($('.tile').slice(0,25));
       }
     }, 1000)
   },

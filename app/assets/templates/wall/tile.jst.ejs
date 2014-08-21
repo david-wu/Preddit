@@ -1,31 +1,27 @@
-<!--A hidden tile that shows and appends itself-->
 
 <% if( !tile.get('over_18') || Wreddit.router.currentUser.get('permitNsfw')){%>
+  <div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> tile panel panel-primary glow">
+    <button type="button" class="close tile-closer" aria-hidden="true">&times;</button>
+    <a class='tile-comment-link' href="http://www.reddit.com<%= tile.get('permalink')%>">
+      <span class="glyphicon glyphicon-comment"></span>
+    </a>
+    <a class="tile-title-text" id='<%=tile.cid%>' href='<%= tile.get('url') %>'>
+      <%=tile.get('title')%>
+    </a>
+    <% if(tile.get('sender_name')){ %>
+      <br>From: <a href="#/f/<%=tile.get('sender_name')%>"><%=tile.get('sender_name')%></a>
+    <% } %>
 
-<div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> tile panel panel-primary glow">
-  <button type="button" class="close tile-closer" aria-hidden="true">&times;</button>
-  <a class='tile-comment-link' href="http://www.reddit.com<%= tile.get('permalink')%>">
-    <span class="glyphicon glyphicon-comment"></span>
-  </a>
-  <a class="tile-title-text" id='<%=tile.cid%>' href='<%= tile.get('url') %>'>
-    <%=tile.get('title')%>
-  </a>
-  <% if(tile.get('sender_name')){ %>
-  <br>From: <a href="#/f/<%=tile.get('sender_name')%>"><%=tile.get('sender_name')%></a>
-  <% } %>
-
-  <div id='<%=tile.cid%>' class="<%=tile.cid%>-media" title="<%= tile.get('title')%>">
+    <div id='<%=tile.cid%>' class="<%=tile.cid%>-media" title="<%= tile.get('title')%>">
 
     <% if(tile.get('imgSrc')){ %>
       <a data-toggle="modal" data-target="#<%= tile.cid%>-<%=wallName%>-modal">
         <img id='<%=tile.cid%>' class='tile-image' src='<%= tile.get('imgSrc') %>'>
       </a>
     <% } %>
-
+    </div>
   </div>
-</div>
 
-  <!-- bare image modal -->
   <div class="modal fade" id="<%= tile.cid%>-<%=wallName%>-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog bare-modal">
       <div class="modal-content bare-modal">
@@ -35,78 +31,4 @@
       </div>
     </div>
   </div>
-
-
-
-  <!-- eventually, use this one for adding comments -->
-  <div class="modal fade" id="<%= tile.cid%>-<%=wallName%>-bare-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel"><%=tile.get('title')%></h4>
-          <br>
-
-
-          <div class="form-group">
-            <input type="text" class="form-control"
-            id="<%= tile.cid%>-<%=wallName%>-field" placeholder="Comment">
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"> Sign Comment
-            </label>
-          </div>
-          <script>
-          $('#<%= tile.cid%>-<%=wallName%>-field').keypress(function (event){
-            if(event.which === 13){
-              event.preventDefault();
-              console.log($('#<%= tile.cid%>-<%=wallName%>-field').val())
-
-              $('#<%= tile.cid%>-<%=wallName%>-field').val('');
-            }
-          })
-          </script>
-
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <img id='<%=tile.cid%>' class='modal-image' src='<%= tile.get('imgSrc') %>'>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <script>
-  if(<%=!stealthAdd%>){
-    $('#<%=tile.cid%>').hide();
-    if(<%=!!tile.get('imgSrc')%>){
-      var imgLoad = imagesLoaded('#<%=tile.cid%>')
-      imgLoad.on( 'done', function(){
-        $('#<%=tile.cid%>').show()
-        <%=wallName%>msnry.appended($('#<%=tile.cid%>'))
-      })
-
-      imgLoad.on( 'fail', function(){
-        $('#<%=tile.cid%>').remove();
-      })
-    } else if(<%=!!tile.get('media')%>){
-      $('#<%=tile.cid%>').show()
-      <%=wallName%>msnry.appended($('#<%=tile.cid%>'))
-    }else{
-      $('#<%=tile.cid%>').show()
-      <%=wallName%>msnry.appended($('#<%=tile.cid%>'))
-    }
-  }else{
-    $('.<%=wallName%>#<%=tile.cid%>').hide();
-    <%=wallName%>msnry.appended($('.<%=wallName%>#<%=tile.cid%>'))
-  }
-  </script>
-
-
 <%}%>

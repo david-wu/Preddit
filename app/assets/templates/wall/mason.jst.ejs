@@ -1,10 +1,8 @@
-<!--Masons place and organize Tiles-->
-
 <script>
-  var container = document.querySelector('.wall.<%=wallName%>');
+  var container = document.querySelector('.wall.<%= wallName %>');
+  debugger
   var <%=wallName%>msnry = new Masonry( container, {
    columnWidth: 360,
   });
   <%=wallName%>msnry.layout();
 </script>
-
