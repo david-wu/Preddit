@@ -1,5 +1,4 @@
 Wreddit.Routers.Tiles = Backbone.Router.extend({
-
   initialize: function (options){
     var that = this;
     this.$allWalls = $('#wall');
@@ -10,21 +9,21 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.navBar = new Wreddit.Views.NavBar();
     this.$navBar.html(this.navBar.render().$el);
 
-    this.mason = new Masonry( '#wall', {
+    this.mason = new Masonry('#wall', {
      columnWidth: 360,
      transitionDuration: 0,
      isFitWidth: true,
      // isOriginTop: false
     });
     this.mason.on('layoutComplete', function(msn, laidOutItems){
-      console.log(laidOutItems)
+      // console.log(laidOutItems)
     })
 
-    // limits rate layout is refreshed at
+    // limits layout() rate
     this.masonTempTiles = [];
     this.mason.layoutLimited = function(tile){
       that.masonTempTiles.push(tile)
-      clearTimeout(that.masonTimeout); 
+      clearTimeout(that.masonTimeout);
       that.masonTimeout = setTimeout(function(){
         for (var i = 0; i < that.masonTempTiles.length; i++){
           that.masonTempTiles[i].show();
@@ -34,14 +33,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
         console.log('layout');
       }, 200);
     }
-
-    // $('#wall').append('<div class="pan">asdf</div>')
-    // $('#wall').append('<div class="pan">aswerdf</div>')
-    // $('#wall').append('<div class="pan">astredf</div>')
-    // $('#wall').append('<div class="pan">asrtydf</div>')
-    // this.mason.appended(document.getElementsByClassName('pan'))
-    // this.mason.options.transitionDuration = 0.4;
-
   },
   routes: {
     "": "visitDefaultWall",
@@ -184,18 +175,12 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $(window).scrollTop(showWall.lastPos);
 
     // reset autoLoader
-    showWall.loading = true;
-    showWall.loadMore();
+    showWall.collection.getMore();
     clearInterval(this.autoLoader);
     this.autoLoader = setInterval(function(){
       if (!showWall.loading && $(window).scrollTop() >= ( $(document).height() -
-      $(window).height()*4)){
-        showWall.loading = true;
-        showWall.loadMore();
-      }
-      var allTiles = $('.tile');
-      if(allTiles.length > 50){
-        that.mason.remove($('.tile').slice(0,25));
+      $(window).height()*5)){
+        showWall.collection.getMore();
       }
     }, 1000)
   },

@@ -1,7 +1,31 @@
 Wreddit.Views.Wall = Backbone.View.extend({
+
+  initialize: function (options) {
+    var that = this;
+    this.mason = options.mason;
+    this.wallName = options.wallName;
+    this.type = options.type;
+
+    this.lastPos = 0;
+    Cookie.add(options.type+'s', options.wallName)
+
+    this.collection = new Wreddit.Collections.Tiles();
+    this.collection.subName = this.wallName;
+    this.listenTo(this.collection, "add", function(res){
+      this.addTile(res);
+    })
+
+    // this.$el.addClass("wall "+this.wallName);
+    // $('#allWalls').append(this.$el);
+
+    $('#wall').html(this.$el);
+    this.loading = false;
+    this.temp = {};
+    var that = this;
+
+  },
   events: {
     'click button.close.tile-closer': 'closeTile',
-    
   },
   closeTile: function(event){
     var wallName = event.toElement.parentElement.getAttribute('wall-name')
@@ -22,49 +46,34 @@ Wreddit.Views.Wall = Backbone.View.extend({
   template: JST['wall/index'],
   addTile: function(tile, stealthAdd) {
     console.log('addtile')
-    if(this.collection._isUnique(tile)){
-      this.collection.add(tile);
-      var renderedContent = JST['wall/tile']({
-        tile: tile,
-        // previousModel: this.collection.models[this.collection.models.length-2],
-        wallName: this.wallName,
-        stealthAdd: stealthAdd
-      })
-      this.$el.append(renderedContent);
-      Wreddit.router.mason.addItems($('#'+tile.cid))
+    var renderedContent = JST['wall/tile']({
+      tile: tile,
+      wallName: this.wallName,
+      stealthAdd: stealthAdd
+    })
+    this.$el.append(renderedContent);
+    Wreddit.router.mason.addItems($('#'+tile.cid))
 
-      // post append masonry stuff
-      $('#'+tile.cid).hide();
-      var imgLoad = imagesLoaded('#'+tile.cid)
-      imgLoad.on( 'done', function(){
-        // layoutLimited restricts the maximum number of layout() called per second
-        // shows all tiles right before layout
-        Wreddit.router.mason.layoutLimited($('#'+tile.cid));
-      })
-    }
+    // post append masonry stuff
+    $('#'+tile.cid).hide();
+    var imgLoad = imagesLoaded('#'+tile.cid)
+    imgLoad.on( 'done', function(){
+      // layoutLimited restricts the maximum number of layout() called per second
+      // shows all tiles right before layout
+      Wreddit.router.mason.layoutLimited($('#'+tile.cid));
+    })
   },
   loadMore: function(){
     this.loading = true;
     var that = this;
-    if(this.type === 'sub'){
-      this.collection.getMore(this.wallName,
-        function(newTiles){
-          that.loading = false;
-          for(var $i = 0; $i < newTiles.length; $i++){
-            that.addTile(newTiles[$i], false)
-          }
-      })
-    } else if(this.type === 'feed'){
-      this.collection.fetch(this.wallName,
-        function(newTiles){
-
-          that.loading = false;
-          for(var $i = 0; $i < newTiles.length; $i++){
-            var newTile = new Wreddit.Models.Tile(newTiles[$i])
-            that.addTile(newTile, false)
-          }
-      })
-    }
+    this.collection.getMore(this.wallName,
+      function(newTiles){
+        that.loading = false;
+      //   for(var $i = 0; $i < newTiles.length; $i++){
+      //     that.collection.add(tile);
+      //   }
+      }
+    )
   },
   render: function () {
     var that = this;
@@ -188,25 +197,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     });
 
   },
-  initialize: function (options) {
-    this.mason = options.mason;
-    this.wallName = options.wallName;
-    this.type = options.type;
 
-    this.lastPos = 0;
-    Cookie.add(options.type+'s', options.wallName)
-    this.collection = new Wreddit.Collections.Tiles();
-
-    // this.$el.addClass("wall "+this.wallName);
-    // $('#allWalls').append(this.$el);
-
-    $('#wall').html(this.$el);
-    this.loading = false;
-    this.temp = {};
-    var that = this;
-
-
-  },
 })
 
 

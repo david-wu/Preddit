@@ -3,24 +3,31 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
   fetch: function(feedName, callback){
     var url = "/api/tiles/"+feedName;
     $.getJSON(url, function(data){
+      data.map(function(res){
+        return new Wreddit.Models.Tile(res);
+      })
       callback(data.tiles);
     })
   },
   getMore: function(subrs, callback, lastTile){
+    if(this.getting === true){
+      return false;
+    }
+    if (this.subName)
     var that = this;
     var picFormats = ['.jpg', '.png', '.gif']
     var imgDomains = ['imgur.com', 'm.imgur.com', 'i.imgur.com']
     var badDomain = ['/a/', '/gallery', '/album/']
+    this.getting = true;
 
-    console.log("http://www.reddit.com/r/"+subrs+".json?limit=25&after="+this.lastTile+"&jsonp=?")
-
-    $.getJSON("http://www.reddit.com/r/"+subrs+".json?limit=25&after="+this.lastTile+"&jsonp=?",
+    console.log("http://www.reddit.com/r/"+this.subName+".json?limit=5&after="+this.lastTile+"&jsonp=?")
+    $.getJSON("http://www.reddit.com/r/"+this.subName+".json?limit=5&after="+this.lastTile+"&jsonp=?",
       function (data){
         var newTiles = [];
-        $.each(data.data.children.slice(0, 25),
+        $.each(data.data.children.slice(0, 5),
           function (i, post) {
             var tile = new Wreddit.Models.Tile(post.data)
-            that.lastTile=tile.get('name');
+            that.lastTile = tile.get('name');
             url = tile.get('url')
             var lastFour = url.substring(url.length-4, url.length)
 
@@ -32,22 +39,17 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
               _.each(badDomain, function (str){
                 if(url.indexOf(str) !== -1){
                   delete tile.attributes.imgSrc;
-
-                  // tile.set('imgSrc', tile.get('thumbnail'))
-                  // tile.set('imgSrc', 'http://pagepeeker.com/thumbs.php?size=x&url='+tile.get('url'))
                 }
               })
-            }else{
-              // tile.set('imgSrc', tile.get('thumbnail'))
-
-              // tile.set('imgSrc', 'http://pagepeeker.com/thumbs.php?size=x&url='+tile.get('url'))
             }
             if (that._isUnique(tile)){
               newTiles.push(tile);
+              that.add(tile);
             }
           }
         )
-        callback(newTiles);
+        // callback(newTiles);
+        that.getting = false;
       }
     )
 
