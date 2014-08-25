@@ -2,87 +2,72 @@ Wreddit.Views.Wall = Backbone.View.extend({
 
   initialize: function (options) {
     var that = this;
-    this.mason = options.mason;
+    this.mason = new Masonry('#wall', {
+      itemSelector: '.tile',
+      columnWidth: 360,
+      transitionDuration: 0,
+      isFitWidth: true,
+      // isOriginTop: false
+    });
     this.wallName = options.wallName;
     this.type = options.type;
-
     this.lastPos = 0;
-    Cookie.add(options.type+'s', options.wallName)
-
-    this.collection = new Wreddit.Collections.Tiles();
-    this.collection.subName = this.wallName;
-    this.listenTo(this.collection, "add", function(res){
-      this.addTile(res);
-    })
-
-    // this.$el.addClass("wall "+this.wallName);
-    // $('#allWalls').append(this.$el);
-
-    $('#wall').html(this.$el);
     this.loading = false;
-    this.temp = {};
-    var that = this;
 
+    this.collection = new Wreddit.Collections.Tiles([],{
+      wallName: this.wallName
+    });
+    this.collection.getMore();
+    this.listenTo(this.collection, "add", function(tile){
+      if( !tile.get('over_18') || Wreddit.router.currentUser.get('permitNsfw')){
+        this.addTile(tile);
+      }
+    });
+
+    Cookie.add(options.type+'s', options.wallName);
   },
   events: {
     'click button.close.tile-closer': 'closeTile',
   },
-  closeTile: function(event){
-    var wallName = event.toElement.parentElement.getAttribute('wall-name')
-    var tileId = event.toElement.parentElement.getAttribute('id')
-    var modelId = event.toElement.parentElement.getAttribute('model-id')
-    $('#'+tileId).remove();
-
-    // window[wallName + 'msnry'].remove($('#'+tileId))
-    // window[wallName + 'msnry'].layout();
-
-    var model = Wreddit.router.feeds[wallName].collection.get(modelId);
-
-    if(model && Wreddit.router.currentUser.get('username') === wallName){
-      model.destroy();
-    }
-
-  },
   template: JST['wall/index'],
   addTile: function(tile, stealthAdd) {
-    console.log('addtile')
+    var that = this;
     var renderedContent = JST['wall/tile']({
       tile: tile,
       wallName: this.wallName,
       stealthAdd: stealthAdd
     })
     this.$el.append(renderedContent);
-    Wreddit.router.mason.addItems($('#'+tile.cid))
 
     // post append masonry stuff
-    $('#'+tile.cid).hide();
-    var imgLoad = imagesLoaded('#'+tile.cid)
-    imgLoad.on( 'done', function(){
-      // layoutLimited restricts the maximum number of layout() called per second
-      // shows all tiles right before layout
-      Wreddit.router.mason.layoutLimited($('#'+tile.cid));
-    })
+    var tileEl = $('.'+this.wallName+'.'+tile.cid);
+    if(tileEl){
+      that.mason.addItems(tileEl)
+      var imgLoad = imagesLoaded(tileEl)
+      imgLoad.on( 'done', function(){
+        that.mason.layoutLimited(tileEl);
+      })
+    }
   },
-  loadMore: function(){
-    this.loading = true;
-    var that = this;
-    this.collection.getMore(this.wallName,
-      function(newTiles){
-        that.loading = false;
-      //   for(var $i = 0; $i < newTiles.length; $i++){
-      //     that.collection.add(tile);
-      //   }
-      }
-    )
+  hide: function(){
+
   },
   render: function () {
     var that = this;
-
-    this.collection.each(function(tile){
-      that.addTile(tile, false);
-    })
-
-    $('.wall.'+this.wallName).sortable({
+    
+    // this.mason.destroy();
+    // that.mason = new Masonry('#wall', {
+    //   itemSelector: '.tile',
+    //   columnWidth: 360,
+    //   transitionDuration: 0,
+    //   isFitWidth: true,
+    //   // isOriginTop: false
+    // });
+    // this.collection.each(function(tile){
+    //   that.addTile(tile, false);
+    // })
+    $('#wall').sortable({
+    // $('.wall.'+this.wallName).sortable({
       items: ".tile",
       tolerance: 'pointer',
       connectWith: "nav-bar-feed-link.ui-sortable",
@@ -195,6 +180,22 @@ Wreddit.Views.Wall = Backbone.View.extend({
       error: function(model, response){
       }
     });
+
+  },
+  closeTile: function(event){
+    var wallName = event.toElement.parentElement.getAttribute('wall-name')
+    var tileId = event.toElement.parentElement.getAttribute('id')
+    var modelId = event.toElement.parentElement.getAttribute('model-id')
+    $('#'+tileId).remove();
+
+    // window[wallName + 'msnry'].remove($('#'+tileId))
+    // window[wallName + 'msnry'].layout();
+
+    var model = Wreddit.router.feeds[wallName].collection.get(modelId);
+
+    if(model && Wreddit.router.currentUser.get('username') === wallName){
+      model.destroy();
+    }
 
   },
 

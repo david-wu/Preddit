@@ -13,15 +13,15 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
     if(this.getting === true){
       return false;
     }
-    if (this.subName)
+
     var that = this;
-    var picFormats = ['.jpg', '.png', '.gif']
-    var imgDomains = ['imgur.com', 'm.imgur.com', 'i.imgur.com']
-    var badDomain = ['/a/', '/gallery', '/album/']
+    var picFormats = ['.jpg', '.png', '.gif'];
+    var imgDomains = ['imgur.com', 'm.imgur.com', 'i.imgur.com'];
+    var badDomain = ['/a/', '/gallery', '/album/'];
     this.getting = true;
 
-    console.log("http://www.reddit.com/r/"+this.subName+".json?limit=5&after="+this.lastTile+"&jsonp=?")
-    $.getJSON("http://www.reddit.com/r/"+this.subName+".json?limit=5&after="+this.lastTile+"&jsonp=?",
+    console.log("http://www.reddit.com/r/"+this.wallName+".json?limit=5&after="+this.lastTile+"&jsonp=?")
+    $.getJSON("http://www.reddit.com/r/"+this.wallName+".json?limit=5&after="+this.lastTile+"&jsonp=?",
       function (data){
         var newTiles = [];
         $.each(data.data.children.slice(0, 5),
@@ -42,8 +42,7 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
                 }
               })
             }
-            if (that._isUnique(tile)){
-              newTiles.push(tile);
+            if (that._isUnique(tile) && tile.get('imgSrc')){
               that.add(tile);
             }
           }
@@ -52,12 +51,11 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
         that.getting = false;
       }
     )
-
   },
-  initialize: function (feedName){
+  initialize: function (models, options){
     this.lastTile = '';
-    if(feedName){
-      this.feedName = feedName;
+    if(options && options.wallName){
+      this.wallName = options.wallName;
     }
   },
   _isUnique: function(candidateTile){

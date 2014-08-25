@@ -1,16 +1,21 @@
 Wreddit.Views.NavBar = Backbone.View.extend({
-  initialize: function(){
+  initialize: function(options){
     this.feeds = {};
     this.subs = {};
     this.$navBarEls = {};
     this._initializeSearchBar();
+    this.user = options.user;
+
+    this.listenTo(this.user, "change", function(tile){
+      this.refreshNavBar(this.user);
+    });
   },
   template: JST['nav/bar'],
   render: function(){
     var renderedContent = this.template({
       feeds: this.feeds,
       subs: this.subs,
-      current_user: 'george'
+      current_user: this.user.get('username')
     });
     this.$el.html(renderedContent)
     return this;

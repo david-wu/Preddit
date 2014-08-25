@@ -5,7 +5,7 @@ class Api::SessionsController < ApplicationController
       @user.reset_token()
       render json: @user
     else
-      render json: { errors: @user.errors.full_messages }, status: 422
+      render json: ['Invalid login!'], status: 422
     end
   end
 
