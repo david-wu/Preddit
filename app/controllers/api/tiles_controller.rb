@@ -1,5 +1,6 @@
 class Api::TilesController < ApplicationController
-  def create
+  # this should be a join, not two seperate queries
+  def create    
     @tile = Tile.new(tile_params)
     if(params['target_name'])
       @user = User.find_by(username: params['target_name'])
@@ -18,6 +19,12 @@ class Api::TilesController < ApplicationController
     end
   end
 
+  def index
+    @user = User.find_by(user_id, 1);
+    @tiles = Tiles.where(user_id: tile_params['user_id'])
+    return json @tiles
+  end
+
   def tile_params
     params.permit('user_id', 'title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
   end
@@ -25,7 +32,7 @@ class Api::TilesController < ApplicationController
   def show
     @user = User.find_by(username: params[:id])
     @tiles = Tile.where(user_id: @user.id)
-    render json: { tiles: @tiles}
+    render json: @tiles
   end
 
   def destroy

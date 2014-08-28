@@ -63,11 +63,12 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   visitFeed: function(feedName){
     feedName = this.formatFeedName(feedName);
     if(!this.feeds[feedName]){
-      this.feeds[feedName] = new Wall(feedName, 'feed')
+      this.feeds[feedName] = new Wreddit.Views.Wall({
+        wallName: feedName,
+        type: 'feed',
+      })
     }
     this._swapWall(this.feeds[feedName]);
-    this.feeds[feedName].render();
-    this._refreshSession();
     $('#subreddit-field').focus();
   },
   signUp: function () {
@@ -155,6 +156,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
 
     // remember wall's lastPos, replaces html, moves back to lastPos
     if(this._currentWall){
+      this._currentView.onDom = false;
       this._currentWall.lastPos = $(window).scrollTop();
     }
     this.$allWalls.html(showWall.render().$el);
@@ -175,6 +177,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
         }
       }
     }, 1000)
+    showWall.onDom = true;
     this._currentWall = showWall;
   },
   _swapView: function (view){

@@ -1,19 +1,32 @@
 Wreddit.Collections.Tiles = Backbone.Collection.extend({
-  // this just calls the callback with an array of fetched tiles
+  model: Wreddit.Models.Tile,
+  initialize: function (models, options){
+    this.lastTile = '';
+    if(options){
+      this.wallName = options.wallName;
+      this.type = options.type
+      this.session_token = options.session_token;
+    }
+  },
+  // change this url and API to something less bad
   fetch: function(feedName, callback){
+    var that = this;
     var url = "/api/tiles/"+feedName;
     $.getJSON(url, function(data){
-      data.map(function(res){
-        return new Wreddit.Models.Tile(res);
-      })
+      data.forEach(function(res){
+        that.add(res);
+      });
       callback(data.tiles);
-    })
+    });
   },
   getMore: function(subrs, callback, lastTile){
     if(this.getting === true){
       return false;
     }
-
+    if(this.type === 'feed'){
+      this.fetch(this.wallName, function(res){})
+      return false;
+    }
     var that = this;
     var picFormats = ['.jpg', '.png', '.gif'];
     var imgDomains = ['imgur.com', 'm.imgur.com', 'i.imgur.com'];
@@ -52,12 +65,8 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
       }
     )
   },
-  initialize: function (models, options){
-    this.lastTile = '';
-    if(options && options.wallName){
-      this.wallName = options.wallName;
-    }
-  },
+
+  // could keep data in a hash set in addition to array
   _isUnique: function(candidateTile){
     for(var i = 0; i<this.length; i++){
       if(this.models[i].get('url') == candidateTile.get('url')){
