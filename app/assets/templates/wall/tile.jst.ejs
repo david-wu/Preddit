@@ -1,4 +1,8 @@
-<div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> <%=tile.cid%> tile panel panel-primary glow">
+<% tile.shadowEffect = "viewed"  %>
+<% if(tile.get("viewed") === false){ %>
+  <% tile.shadowEffect = "unviewed" %>
+<% } %>
+<div id='<%=tile.cid%>' model-id="<%=tile.get('id')%>" wall-name="<%=wallName%>" class="<%=wallName%> <%=tile.cid%> tile panel panel-primary <%= tile.shadowEffect %>">
   <button type="button" class="close tile-closer" aria-hidden="true">&times;</button>
   <a class='tile-comment-link' target="_blank" href="http://www.reddit.com<%= tile.get('permalink')%>">
     <span class="glyphicon glyphicon-comment"></span>

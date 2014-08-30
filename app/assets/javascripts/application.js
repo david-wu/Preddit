@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require underscore
+//= require masonry
 //= require_tree ../templates
 //= require jquery
 //= require jquery_ujs
@@ -25,6 +26,5 @@
 //= require_tree ./views
 //= require_tree ./routers
 //= require_tree .
-//= require masonry
 //= require bootstrap
 //= require imagesloaded.pkgd.js

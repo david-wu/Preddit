@@ -1,4 +1,14 @@
 Wreddit.Routers.Tiles = Backbone.Router.extend({
+  routes: {
+    "": "visitDefaultWall",
+    "r/:sub": "visitSub",
+    "f/:feed": "visitFeed",
+    "newUser": "signUp",
+    "newSession": "signIn",
+    "destroySession": "signOut",
+    "editSettings": "editSettings",
+    "viewAbout": "viewAbout",
+  },
   initialize: function (options){
     var that = this;
     this.$allWalls = $('#wall');
@@ -16,35 +26,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.navBar.appendWall('Aww','sub');
     this.navBar.appendWall('All','sub');
     this.navBar.appendWall('dawu','feed');
-
-    // limits mason's layout() rate
-    (function(){
-      var masonTempTiles = [];
-      var masonTimeout;
-      Masonry.prototype.layoutLimited = function(tile){
-        var that = this;
-        masonTempTiles.push(tile)
-        clearTimeout(masonTimeout);
-        masonTimeout = setTimeout(function(){
-          for (var i = 0; i < masonTempTiles.length; i++){
-            masonTempTiles[i].show();
-          }
-          that.layout();
-          masonTempTiles = [];
-          console.log('layout');
-        }, 500);
-      };
-    })()
-  },
-  routes: {
-    "": "visitDefaultWall",
-    "r/:sub": "visitSub",
-    "f/:feed": "visitFeed",
-    "newUser": "signUp",
-    "newSession": "signIn",
-    "destroySession": "signOut",
-    "editSettings": "editSettings",
-    "viewAbout": "viewAbout",
   },
   visitDefaultWall: function(){
     Wreddit.router.navigate('#r/Aww', {trigger:true});
@@ -156,14 +137,14 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
 
     // remember wall's lastPos, replaces html, moves back to lastPos
     if(this._currentWall){
-      this._currentView.onDom = false;
+      this._currentWall.onDom = false;
       this._currentWall.lastPos = $(window).scrollTop();
     }
     this.$allWalls.html(showWall.render().$el);
     showWall.mason.layout();
     $(window).scrollTop(showWall.lastPos);
 
-    // reset autoLoader
+    // loading should be kept true until number of loading images drops below 30
     clearInterval(this.autoLoader);
     this.autoLoader = setInterval(function(){
       if(showWall.mason.options.isOriginTop === true){
@@ -187,9 +168,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this._currentView.remove();
     }
     this._currentView = view;
-    this.$minorEl.show();
-    this.$allWalls.hide();
-    this.$minorEl.html(view.$el);
+    // this.$minorEl.show();
+    // this.$allWalls.hide();
+    this.$allWalls.html(view.$el);
   },
   formatWallName: function (name){
     name = name.replace(/[^a-zA-Z]/g, '');

@@ -1,5 +1,6 @@
 class Api::TilesController < ApplicationController
-  # this should be a join, not two seperate queries
+  # these should be a joins, not two seperate queries
+
   def create    
     @tile = Tile.new(tile_params)
     if(params['target_name'])
@@ -20,24 +21,32 @@ class Api::TilesController < ApplicationController
   end
 
   def index
-    @user = User.find_by(user_id, 1);
-    @tiles = Tiles.where(user_id: tile_params['user_id'])
-    return json @tiles
-  end
-
-  def tile_params
-    params.permit('user_id', 'title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
-  end
-
-  def show
-    @user = User.find_by(username: params[:id])
+    @user = User.find_by(username: params[:username])
+    @requesting_user = User.find_by(session_token: params[:session_token])
     @tiles = Tile.where(user_id: @user.id)
+    if @user == @requesting_user
+      @tiles.update_all("viewed = true")
+    end
+    @tiles = @tiles.reverse
     render json: @tiles
   end
+
+
+  # def show
+  #   @user = User.find_by(username: params[:id])
+  #   @tiles = Tile.where(user_id: @user.id)
+  #   @tiles.update_all("viewed = true")    
+  #   render json: @tiles
+  # end
 
   def destroy
     @tile = Tile.find(params[:id])
     @tile.destroy
     render json: { tile: @tile}
   end
+
+  def tile_params
+    params.permit('session_token', 'viewed', 'user_id', 'title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
+  end
+
 end

@@ -174,6 +174,8 @@ Wreddit.Views.NavBar = Backbone.View.extend({
 
 })
 
-
+Wreddit.Views.NavBar.CreateNavEl = function(){
+  
+}
 
 
