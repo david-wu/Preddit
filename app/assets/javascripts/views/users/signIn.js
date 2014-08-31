@@ -28,7 +28,8 @@ Wreddit.Views.SignIn = Backbone.View.extend({
         that._showErrorMessage(error);
       })
     }).done(function(res){
-      Wreddit.router.navigate('#f/'+that.user.get('username'), {trigger: true})
+      Wreddit.router.navigate('#f/'+that.user.get('username'), {trigger: true});
+      Cookie.set('user', JSON.stringify(that.user))
     })
   },
   _showErrorMessage: function(message){

@@ -15,12 +15,6 @@
  */
 @import "bootstrap";
 
-
-
-.shepherd-step {
-  z-index: 1000000000000;
-}
-
 a:hover {
   text-decoration:none
 }
@@ -29,31 +23,22 @@ a:hover {
   background: rgba(235, 229, 213, 0.7);
   outline: none;
 }
-.subnav {
-    top: 40px;
-    position: relative;
+body {
+  padding-top: 70px;
+  padding-left: 15px;
 }
+
 .wall-link{
   color: #369 !important;
   font: normal verdana,arial,helvetica,sans-serif;
   font-weight: bold;
   float: left;
-
-}
-
-#nothing {
 }
 
 .center {
     margin-left: auto;
     margin-right: auto;
 }
-    
-body {
-  padding-top: 70px;
-  padding-left: 15px;
-}
-
 
 .tile.panel.panel-primary {
     width: 350px;
@@ -61,13 +46,13 @@ body {
     display: none;
     padding: 2px;
 }
-.tile-image {
-    width: 344px;
-    max-height: 1000px;
-}
 a.tile-comment-link{
   float:right;
   margin: 5px;
+}
+.tile-image {
+    width: 344px;
+    max-height: 1000px;
 }
 .glyphicon.glyphicon-comment{
   color: #369;
@@ -86,8 +71,6 @@ button.close.tile-closer:hover{
   opacity: 1;
 }
 
-
-
 .modal-image {
   width: 700px;
 }
@@ -101,7 +84,6 @@ button.close.tile-closer:hover{
   width: 0px;
   height: 0px;
 }
-
 
 .viewed {
   -webkit-transition-duration: 0.3s;
@@ -129,12 +111,6 @@ button.close.tile-closer:hover{
   box-shadow: 0 0 25px #00CC66;
 }
 
-
-.asdf {
-  outline: none;
-  border-color: #9ecaed;
-  box-shadow: 0 0 10px #9ecaed;
-}
 
 //about page
 .site-thumb {

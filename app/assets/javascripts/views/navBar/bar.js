@@ -164,7 +164,7 @@ Wreddit.Views.NavBar = Backbone.View.extend({
       $( "#subreddit-field" ).catcomplete({
         delay: 0,
         source: that.data,
-        autoFocus: true,
+        autoFocus: false,
       });
 
       $('.ui-autocomplete.ui-front').css("zIndex", 10000);

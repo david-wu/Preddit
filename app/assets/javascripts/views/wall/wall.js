@@ -6,6 +6,12 @@ Wreddit.Views.Wall = Backbone.View.extend({
   },
   initialize: function (options) {
     var that = this;
+    this.wallName = options.wallName;
+    this.type = options.type;
+    this.lastPos = 0;
+    this.loading = false;
+    this.onDom = false;
+    this.loadingImageCount = 0;
     this.mason = new Masonry('#wall', {
       itemSelector: '.tile',
       columnWidth: 360,
@@ -13,32 +19,24 @@ Wreddit.Views.Wall = Backbone.View.extend({
       isFitWidth: true,
       // isOriginTop: options.isOriginTop
     });
-    this.wallName = options.wallName;
-    this.type = options.type;
-    this.lastPos = 0;
-    this.loading = false;
-    this.onDom = false;
-    this.loadingImageCount = 0;
     this.collection = new Wreddit.Collections.Tiles([],{
       wallName: this.wallName,
       type: this.type
     });
+
     this.collection.getMore();
     this.listenTo(this.collection, "add", function(tile){
-      // should pass user's settings in as values
       if( !tile.get('over_18') || Wreddit.router.currentUser.get('permitNsfw')){
         that.addTile(tile);
       }
     });
 
-
-
+    // checks feeds for new content
 
   },
   addTile: function(tile) {
     var that = this;
     this.loadingImageCount++;
-    console.log("images still loading: " + that.loadingImageCount);
     var $tile = $(JST['wall/tile']({
       tile: tile,
       wallName: this.wallName,
@@ -47,7 +45,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
 
     // the problem here is that $tile consists of the tile and it's modal
     // giving a modal position absolute messes with z layout
-    // fix this somehow
     $tile = $('.tile.'+tile.cid)
 
     if(this.onDom){
@@ -55,7 +52,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
       var imgLoad = imagesLoaded($tile)
       imgLoad.on( 'done', function(){
         if(that.onDom){
-          // layoutLimited actually also has a slight delay
           that.loadingImageCount--;
           that.mason.layoutLimited($tile);
         }
@@ -63,12 +59,27 @@ Wreddit.Views.Wall = Backbone.View.extend({
     }
 
   },
+  closeTile: function(event){
+    var wallName = event.toElement.parentElement.getAttribute('wall-name')
+    var tileId = event.toElement.parentElement.getAttribute('id')
+    var modelId = event.toElement.parentElement.getAttribute('model-id')
+    $('#'+tileId).remove();
+
+    // window[wallName + 'msnry'].remove($('#'+tileId))
+    // window[wallName + 'msnry'].layout();
+
+    var model = Wreddit.router.feeds[wallName].collection.get(modelId);
+
+    if(model && Wreddit.router.currentUser.get('username') === wallName){
+      model.destroy();
+    }
+    this.mason.layout();
+  },
   render: function () {
     var that = this;
 
     
     this.$el.sortable({
-    // $('.wall.'+this.wallName).sortable({
       items: ".tile",
       tolerance: 'pointer',
       connectWith: ".nav-bar-feed-link.ui-sortable",
@@ -92,17 +103,16 @@ Wreddit.Views.Wall = Backbone.View.extend({
           'font-size': 40,
           margin: 75,
           'line-height': 'normal',
+          'z-index': 10000000000000000,
         }, 100)
         $('#main-navbar').animate({
           height: '100%'
         }, 100)
-      },
-      receive: function(event, ui) {
-
+        // debugger
+        $(ui.item[0]).css("z-index", 1000000)
       },
       stop: function (event, ui) {
         event.preventDefault();
-
         // show non-feeds
         $('#allWall-links').animate({
           opacity: 1,
@@ -123,7 +133,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
         $('#main-navbar').animate({
           height: 50,
         }, 400)
-
         that._dragEvent(event, ui);
       },
     })
@@ -143,18 +152,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
       },
 
     })
-    // this.mason.destroy();
-    // that.mason = new Masonry('#wall', {
-    //   itemSelector: '.tile',
-    //   columnWidth: 360,
-    //   transitionDuration: 0,
-    //   isFitWidth: true,
-    //   // isOriginTop: false
-    // });
-    // this.collection.each(function(tile){
-    //   that.addTile(tile, false);
-    // })
-
     return this;
   },
   _dragEvent: function(event, ui){
@@ -172,7 +169,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
       // collection = window.Wreddit.router.feeds[ui.item.context.get('class')].collection
     }
     var sentModel = collection.get(ui.item[0].id);
-
     // var sentModel = window.Wreddit.router.subs[ui.item[0].classList[0]].collection.get(ui.item[0].id);
     // var sentModel = window.Wreddit.router.subs[ui.item.context.get('class')].collection.get(ui.item[0].id);
 
@@ -197,22 +193,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     });
 
   },
-  closeTile: function(event){
-    var wallName = event.toElement.parentElement.getAttribute('wall-name')
-    var tileId = event.toElement.parentElement.getAttribute('id')
-    var modelId = event.toElement.parentElement.getAttribute('model-id')
-    $('#'+tileId).remove();
 
-    // window[wallName + 'msnry'].remove($('#'+tileId))
-    // window[wallName + 'msnry'].layout();
-
-    var model = Wreddit.router.feeds[wallName].collection.get(modelId);
-
-    if(model && Wreddit.router.currentUser.get('username') === wallName){
-      model.destroy();
-    }
-
-  },
 
 })
 

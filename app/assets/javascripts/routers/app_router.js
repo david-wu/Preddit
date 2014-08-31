@@ -2,6 +2,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   routes: {
     "": "visitDefaultWall",
     "r/:sub": "visitSub",
+    // change to /u, more like reddit
     "f/:feed": "visitFeed",
     "newUser": "signUp",
     "newSession": "signIn",
@@ -17,15 +18,12 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.subs = {};
     this.feeds = {};
 
-    this.currentUser = new Wreddit.Models.User();
+    // listener on this.currentUser to update navBar on change
+    this.currentUser = new Wreddit.Models.User(JSON.parse(Cookie.get("user")));
     this.navBar = new Wreddit.Views.NavBar({
       user: this.currentUser
     });
     this.$navBar.html(this.navBar.render().$el);
-
-    this.navBar.appendWall('Aww','sub');
-    this.navBar.appendWall('All','sub');
-    this.navBar.appendWall('dawu','feed');
   },
   visitDefaultWall: function(){
     Wreddit.router.navigate('#r/Aww', {trigger:true});
@@ -33,6 +31,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   visitSub: function(subName){
     subName = this.formatWallName(subName);
     if(!this.subs[subName]){
+      this.navBar.appendWall(subName, 'sub');
       this.subs[subName] = new Wreddit.Views.Wall({
         wallName: subName,
         type: 'sub',
@@ -43,12 +42,14 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   },
   visitFeed: function(feedName){
     feedName = this.formatFeedName(feedName);
-    if(!this.feeds[feedName]){
-      this.feeds[feedName] = new Wreddit.Views.Wall({
-        wallName: feedName,
-        type: 'feed',
-      })
+    if(this.feeds[feedName]){
+      this.navBar.appendWall(subName, 'sub');
+      this.feeds[feedName].remove();
     }
+    this.feeds[feedName] = new Wreddit.Views.Wall({
+      wallName: feedName,
+      type: 'feed',
+    })
     this._swapWall(this.feeds[feedName]);
     $('#subreddit-field').focus();
   },
@@ -93,7 +94,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $('#allFeed-links').html('')
     this.subs = {};
     this.feeds = {};
-    Cookie.delete('sessionToken')
+    Cookie.delete('user')
     Cookie.delete('subs')
     Cookie.delete('feeds')
     this.navigate('#newSession', {trigger:true});
@@ -102,9 +103,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   },
   _refreshSession: function (){
     var that = this;
-    if(!this.currentUser){
-      this.currentUser = new Wreddit.Models.User()
-    }
+    // if(!this.currentUser){
+    //   this.currentUser = new Wreddit.Models.User()
+    // }
     Wreddit.Models.User.currentUser(document.cookie, function(response){
       if(response.id){
         that.currentUser = new Wreddit.Models.User(response);
@@ -141,15 +142,20 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this._currentWall.lastPos = $(window).scrollTop();
     }
     this.$allWalls.html(showWall.render().$el);
-    showWall.mason.layout();
+    imagesLoaded(showWall.$el).on('done', function(){
+      showWall.mason.layout();
+    });
     $(window).scrollTop(showWall.lastPos);
 
+    this._updateAutoLoader(showWall);
     // loading should be kept true until number of loading images drops below 30
+
+  },
+  _updateAutoLoader: function(showWall){
     clearInterval(this.autoLoader);
     this.autoLoader = setInterval(function(){
       if(showWall.mason.options.isOriginTop === true){
-        if (!showWall.loading && $(window).scrollTop() >= ( $(document).height() -
-        $(window).height()*5)){
+        if (!showWall.loading && $(window).scrollTop() >= ($(document).height() - $(window).height()*5)){
           showWall.collection.getMore();
         }
       }else{

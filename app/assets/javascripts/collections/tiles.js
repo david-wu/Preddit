@@ -17,8 +17,10 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
        session_token: Wreddit.router.currentUser.get('session_token')
      }, function(data){
       data.forEach(function(res){
-
-        that.add(res);
+        var tile = new Wreddit.Models.Tile(res);
+        if (that._isUnique(tile) && tile.get('imgSrc')){
+          that.add(tile);
+        }
       });
       callback(data.tiles);
     });
@@ -37,8 +39,8 @@ Wreddit.Collections.Tiles = Backbone.Collection.extend({
     var imgDomains = ['imgur.com', 'm.imgur.com', 'i.imgur.com'];
     var badDomain = ['/a/', '/gallery', '/album/'];
 
-    console.log("getting from http://www.reddit.com/r/"+this.wallName+".json?limit=5&after="+this.lastTile+"&jsonp=?")
-    var promise =  $.getJSON("http://www.reddit.com/r/"+this.wallName+".json?limit=5&after="+this.lastTile+"&jsonp=?")
+    console.log("getting from http://www.reddit.com/r/"+this.wallName+".json?limit=10&after="+this.lastTile+"&jsonp=?")
+    var promise =  $.getJSON("http://www.reddit.com/r/"+this.wallName+".json?limit=10&after="+this.lastTile+"&jsonp=?")
     .done(function (data){
       var newTiles = [];
       $.each(data.data.children, function (i, post) {

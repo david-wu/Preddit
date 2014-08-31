@@ -39,6 +39,7 @@ Wreddit.Views.SignUp = Backbone.View.extend({
       }, {})
       tile.save()
       Wreddit.router.navigate('#f/'+attrs.user.username, {trigger: true})
+      Cookie.set('user', JSON.stringify(that.user))
     }).fail(function(res){
       res.responseJSON.forEach(function(error){
         that._showErrorMessage(error);

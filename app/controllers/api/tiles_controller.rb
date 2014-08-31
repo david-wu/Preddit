@@ -1,6 +1,5 @@
 class Api::TilesController < ApplicationController
-  # these should be a joins, not two seperate queries
-
+  # these should use joins via associations, not two seperate queries
   def create    
     @tile = Tile.new(tile_params)
     if(params['target_name'])
@@ -20,24 +19,16 @@ class Api::TilesController < ApplicationController
     end
   end
 
+  # if correct session_token is passed in, set walls tiles to viewed
   def index
     @user = User.find_by(username: params[:username])
     @requesting_user = User.find_by(session_token: params[:session_token])
-    @tiles = Tile.where(user_id: @user.id)
+    @tiles = Tile.where(user_id: @user.id).order(created_at: :desc)
+    render json: @tiles
     if @user == @requesting_user
       @tiles.update_all("viewed = true")
     end
-    @tiles = @tiles.reverse
-    render json: @tiles
   end
-
-
-  # def show
-  #   @user = User.find_by(username: params[:id])
-  #   @tiles = Tile.where(user_id: @user.id)
-  #   @tiles.update_all("viewed = true")    
-  #   render json: @tiles
-  # end
 
   def destroy
     @tile = Tile.find(params[:id])
