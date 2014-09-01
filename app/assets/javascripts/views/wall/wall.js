@@ -30,9 +30,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
         that.addTile(tile);
       }
     });
-
-    // checks feeds for new content
-
   },
   addTile: function(tile) {
     var that = this;
@@ -43,8 +40,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     }));
     this.$el.append($tile);
 
-    // the problem here is that $tile consists of the tile and it's modal
-    // giving a modal position absolute messes with z layout
+    // $tile consists of the tile and its modal
     $tile = $('.tile.'+tile.cid)
 
     if(this.onDom){
@@ -57,17 +53,12 @@ Wreddit.Views.Wall = Backbone.View.extend({
         }
       })
     }
-
   },
   closeTile: function(event){
     var wallName = event.toElement.parentElement.getAttribute('wall-name')
     var tileId = event.toElement.parentElement.getAttribute('id')
     var modelId = event.toElement.parentElement.getAttribute('model-id')
     $('#'+tileId).remove();
-
-    // window[wallName + 'msnry'].remove($('#'+tileId))
-    // window[wallName + 'msnry'].layout();
-
     var model = Wreddit.router.feeds[wallName].collection.get(modelId);
 
     if(model && Wreddit.router.currentUser.get('username') === wallName){
@@ -103,13 +94,10 @@ Wreddit.Views.Wall = Backbone.View.extend({
           'font-size': 40,
           margin: 75,
           'line-height': 'normal',
-          'z-index': 10000000000000000,
         }, 100)
         $('#main-navbar').animate({
           height: '100%'
         }, 100)
-        // debugger
-        $(ui.item[0]).css("z-index", 1000000)
       },
       stop: function (event, ui) {
         event.preventDefault();
@@ -155,7 +143,6 @@ Wreddit.Views.Wall = Backbone.View.extend({
     return this;
   },
   _dragEvent: function(event, ui){
-    
     var originTile = ''
     var targetCollection = ''
     var wallName = ui.item.context.getAttribute('wall-name');
@@ -166,19 +153,11 @@ Wreddit.Views.Wall = Backbone.View.extend({
     }
     if(!collection){
       return false;
-      // collection = window.Wreddit.router.feeds[ui.item.context.get('class')].collection
     }
     var sentModel = collection.get(ui.item[0].id);
-    // var sentModel = window.Wreddit.router.subs[ui.item[0].classList[0]].collection.get(ui.item[0].id);
-    // var sentModel = window.Wreddit.router.subs[ui.item.context.get('class')].collection.get(ui.item[0].id);
-
     var targetName = event.toElement.firstChild.data
 
-
-    // var targetView = window.Wreddit.router.feeds[event.toElement.firstChild.data].view;
-
     sentModel = new Wreddit.Models.Tile(sentModel.attributes);
-    // debugger
     sentModel.set({sender_id: Wreddit.router.currentUser.get('id')});
     sentModel.attributes.target_name = targetName;
     sentModel.attributes.sender_name = Wreddit.router.currentUser.get('username');
@@ -191,10 +170,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
       error: function(model, response){
       }
     });
-
   },
-
-
 })
 
 

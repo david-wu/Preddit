@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
     validates :username, :password_digest, presence: true
     validates :username, uniqueness: true
     before_create :ensure_session_token
+    has_many :open_walls
 
     def password
 

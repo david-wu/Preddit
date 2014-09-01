@@ -3,32 +3,24 @@ Wreddit.Views.NavBar = Backbone.View.extend({
     this.feeds = {};
     this.subs = {};
     this.$navBarEls = {};
-    this._initializeSearchBar();
+    // this._initializeSearchBar();
     this.user = options.user;
 
     this.listenTo(this.user, "change", function(tile){
-      this.refreshNavBar(this.user);
+      this.render();
     });
   },
   template: JST['nav/bar'],
   render: function(){
+    this.refreshUsers();
     var renderedContent = this.template({
       feeds: this.feeds,
       subs: this.subs,
       current_user: this.user.get('username')
     });
     this.$el.html(renderedContent)
+    this._initializeSearchBar()
     return this;
-  },
-  refreshNavBar: function (user){
-    this.refreshUsers();
-    if(user.id){
-      $('#current_user_in_nav_bar').html(user.get('username'));
-      $('#main-nav-dropdown').html('<li><a href="#f/'+user.get('username')+'">My Wall</a></li><li><a href="#destroySession">Sign Out</a></li><li class="divider"></li><li><a href="#editSettings">Settings</a></li><li><a href="#viewAbout">About</a></li>');
-    }else{
-      $('#current_user_in_nav_bar').html("Account");
-      $('#main-nav-dropdown').html('<li><a href="#newUser">Sign up</a></li><li><a href="#newSession">Log In</a></li><li class="divider"></li><li><a href="#viewAbout">About</a></li>');
-    }
   },
   refreshUsers: function (){
     var that = this;
@@ -140,9 +132,9 @@ Wreddit.Views.NavBar = Backbone.View.extend({
       { label: "4chan", category: "Subreddits" },
       { label: "GameOfThrones", category: "Subreddits" },
     ];
-
     $(document).ready(function(){
-      $('#subreddit-field').keypress(function (event){
+      $('#subreddit-field').keyup(function (event){
+
         if(event.which === 13){
           event.preventDefault();
           var input = $('#subreddit-field').val();

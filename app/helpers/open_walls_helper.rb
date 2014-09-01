@@ -1,0 +1,2 @@
+module OpenWallsHelper
+end

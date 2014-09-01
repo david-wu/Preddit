@@ -13,7 +13,6 @@ Wreddit.Views.SignIn = Backbone.View.extend({
   },
   signIn: function(event){
     var that = this;
-    // get and sanitize input
     event.preventDefault();
     var attrs = $(event.target.form).serializeJSON();
     var re = /[^A-Za-z]/
@@ -24,9 +23,7 @@ Wreddit.Views.SignIn = Backbone.View.extend({
     this.user.set(attrs);
     // attempt login
     this.user.signIn().fail(function(res){
-      res.responseJSON.forEach(function(error){
-        that._showErrorMessage(error);
-      })
+      that._showErrorMessage("Invalid Login")
     }).done(function(res){
       Wreddit.router.navigate('#f/'+that.user.get('username'), {trigger: true});
       Cookie.set('user', JSON.stringify(that.user))

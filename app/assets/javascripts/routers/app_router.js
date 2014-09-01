@@ -2,7 +2,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   routes: {
     "": "visitDefaultWall",
     "r/:sub": "visitSub",
-    // change to /u, more like reddit
     "f/:feed": "visitFeed",
     "newUser": "signUp",
     "newSession": "signIn",
@@ -13,23 +12,23 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   initialize: function (options){
     var that = this;
     this.$allWalls = $('#wall');
-    this.$minorEl = $('#allOthers');
     this.$navBar = $('#navBar');
     this.subs = {};
     this.feeds = {};
 
-    // listener on this.currentUser to update navBar on change
     this.currentUser = new Wreddit.Models.User(JSON.parse(Cookie.get("user")));
     this.navBar = new Wreddit.Views.NavBar({
       user: this.currentUser
     });
     this.$navBar.html(this.navBar.render().$el);
+
+    this.navBar.appendWall('dawu', 'feed');
   },
   visitDefaultWall: function(){
     Wreddit.router.navigate('#r/Aww', {trigger:true});
   },
   visitSub: function(subName){
-    subName = this.formatWallName(subName);
+    subName = this._formatWallName(subName);
     if(!this.subs[subName]){
       this.navBar.appendWall(subName, 'sub');
       this.subs[subName] = new Wreddit.Views.Wall({
@@ -41,9 +40,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $('#subreddit-field').focus();
   },
   visitFeed: function(feedName){
-    feedName = this.formatFeedName(feedName);
+    feedName = this._formatFeedName(feedName);
     if(this.feeds[feedName]){
-      this.navBar.appendWall(subName, 'sub');
       this.feeds[feedName].remove();
     }
     this.feeds[feedName] = new Wreddit.Views.Wall({
@@ -59,7 +57,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     })
     this._swapView(this.newUserView);
     this.newUserView.render();
-    this._refreshSession();
     $('#username-field').focus();
   },
   signIn: function () {
@@ -68,74 +65,51 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     })
     this._swapView(this.newSessionView);
     this.newSessionView.render();
-    this._refreshSession();
     $('#username-field').focus();
   },
   editSettings: function () {
     this.newSettingsView = new Wreddit.Views.Settings({})
     this._swapView(this.newSettingsView);
     this.newSettingsView.render();
-    this._refreshSession();
     $('#email-input').focus();
   },
   viewAbout: function () {
     this.aboutView = new Wreddit.Views.About({})
     this._swapView(this.aboutView);
     this.aboutView.render();
-    this._refreshSession();
     $('#subreddit-field').focus();
   },
   signOut: function () {
-    this.currentUser = new Wreddit.Models.User();
-    this.navBar.refreshNavBar(this.currentUser);
+    this.currentUser.clear();
+    this.navBar.render();
     this.$allWalls.html('');
-    this.$minorEl.html('');
-    $('#allWall-links').html('')
-    $('#allFeed-links').html('')
     this.subs = {};
     this.feeds = {};
     Cookie.delete('user')
     Cookie.delete('subs')
     Cookie.delete('feeds')
     this.navigate('#newSession', {trigger:true});
-    this._refreshSession();
     $('#username-field').focus();
   },
   _refreshSession: function (){
-    var that = this;
-    // if(!this.currentUser){
-    //   this.currentUser = new Wreddit.Models.User()
-    // }
-    Wreddit.Models.User.currentUser(document.cookie, function(response){
-      if(response.id){
-        that.currentUser = new Wreddit.Models.User(response);
-      }else{
-        console.log("Not valid login");
-      }
-      that.navBar.refreshNavBar(that.currentUser);
-    })
-
     // replace this with api
-    // if(Cookie.get('feeds')){
-    //   _.each(Cookie.get('feeds').split(','), function(subName){
-    //     if(!that.feeds[subName]){
-    //       that.feeds[subName] = new Wreddit.Views.Feed(subName, 'feed')
-    //     }
-    //   })
-    // }
-    // if(Cookie.get('subs')){
-    //   _.each(Cookie.get('subs').split(','), function(subName){
-    //     if(!that.subs[subName]){
-    //       that.subs[subName] = new Wreddit.Views.Wall(subName, 'sub')
-    //     }
-    //   })
-    // }
-
+    if(Cookie.get('feeds')){
+      _.each(Cookie.get('feeds').split(','), function(subName){
+        if(!that.feeds[subName]){
+          that.feeds[subName] = new Wreddit.Views.Feed(subName, 'feed')
+        }
+      })
+    }
+    if(Cookie.get('subs')){
+      _.each(Cookie.get('subs').split(','), function(subName){
+        if(!that.subs[subName]){
+          that.subs[subName] = new Wreddit.Views.Wall(subName, 'sub')
+        }
+      })
+    }
   },
-
   _swapWall: function (showWall){
     var that = this;
-
     // remember wall's lastPos, replaces html, moves back to lastPos
     if(this._currentWall){
       this._currentWall.onDom = false;
@@ -146,10 +120,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       showWall.mason.layout();
     });
     $(window).scrollTop(showWall.lastPos);
-
     this._updateAutoLoader(showWall);
-    // loading should be kept true until number of loading images drops below 30
-
   },
   _updateAutoLoader: function(showWall){
     clearInterval(this.autoLoader);
@@ -174,17 +145,15 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       this._currentView.remove();
     }
     this._currentView = view;
-    // this.$minorEl.show();
-    // this.$allWalls.hide();
     this.$allWalls.html(view.$el);
   },
-  formatWallName: function (name){
+  _formatWallName: function (name){
     name = name.replace(/[^a-zA-Z]/g, '');
     name = name.toLowerCase();
     name = name[0].toUpperCase() + name.slice(1);
     return name;
   },
-  formatFeedName: function (name){
+  _formatFeedName: function (name){
     name = name.replace(/[^a-zA-Z]/g, '');
     return name;
   },
