@@ -21,8 +21,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       user: this.currentUser
     });
     this.$navBar.html(this.navBar.render().$el);
-
-    this.navBar.appendWall('dawu', 'feed');
   },
   visitDefaultWall: function(){
     Wreddit.router.navigate('#r/Aww', {trigger:true});
@@ -40,9 +38,12 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $('#subreddit-field').focus();
   },
   visitFeed: function(feedName){
+
     feedName = this._formatFeedName(feedName);
     if(this.feeds[feedName]){
       this.feeds[feedName].remove();
+    }else{
+      this.navBar.appendWall(feedName, 'feed');
     }
     this.feeds[feedName] = new Wreddit.Views.Wall({
       wallName: feedName,
