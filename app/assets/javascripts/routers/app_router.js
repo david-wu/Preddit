@@ -118,6 +118,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     if(this._currentWall){
       this._currentWall.onDom = false;
       this._currentWall.lastPos = $(window).scrollTop();
+      this.$allWalls.html('')
+      this._currentWall.mason.layout();
     }
     this.$allWalls.html(showWall.render().$el);
     imagesLoaded(showWall.$el).on('done', function(){
@@ -125,6 +127,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     });
     $(window).scrollTop(showWall.lastPos);
     this._updateAutoLoader(showWall);
+    this._currentWall = showWall;
   },
   _swapView: function (view){
     $(window).scrollTop(0);
@@ -153,7 +156,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
       }
     }, 1000)
     showWall.onDom = true;
-    this._currentWall = showWall;
   },
   _formatWallName: function (name){
     name = name.replace(/[^a-zA-Z]/g, '');
