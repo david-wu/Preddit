@@ -124,8 +124,10 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$allWalls.html(showWall.render().$el);
     imagesLoaded(showWall.$el).on('done', function(){
       showWall.mason.layout();
+      $(window).scrollTop(showWall.lastPos);
     });
-    $(window).scrollTop(showWall.lastPos);
+    // debugger
+
     this._updateAutoLoader(showWall);
     this._currentWall = showWall;
   },
