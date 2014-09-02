@@ -11,6 +11,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   },
   initialize: function (options){
     var that = this;
+    this.$otherViews = $('#otherViews');
     this.$allWalls = $('#wall');
     this.$navBar = $('#navBar');
     this.subs = {};
@@ -111,6 +112,8 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   },
   _swapWall: function (showWall){
     var that = this;
+    this.$otherViews.hide();
+    this.$allWalls.show();
     // remember wall's lastPos, replaces html, moves back to lastPos
     if(this._currentWall){
       this._currentWall.onDom = false;
@@ -122,6 +125,19 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     });
     $(window).scrollTop(showWall.lastPos);
     this._updateAutoLoader(showWall);
+  },
+  _swapView: function (view){
+    $(window).scrollTop(0);
+    this.$otherViews.show();
+    this.$allWalls.hide();
+    console.log("_swapView("+view+")")
+    this.$allWalls.html('');
+    clearInterval(this.autoLoader);
+    if (this._currentView) {
+      this._currentView.remove();
+    }
+    this._currentView = view;
+    this.$otherViews.html(view.render().$el);
   },
   _updateAutoLoader: function(showWall){
     clearInterval(this.autoLoader);
@@ -138,15 +154,6 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     }, 1000)
     showWall.onDom = true;
     this._currentWall = showWall;
-  },
-  _swapView: function (view){
-    console.log("_swapView("+view+")")
-    clearInterval(this.autoLoader);
-    if (this._currentView) {
-      this._currentView.remove();
-    }
-    this._currentView = view;
-    this.$allWalls.html(view.$el);
   },
   _formatWallName: function (name){
     name = name.replace(/[^a-zA-Z]/g, '');
