@@ -7,7 +7,7 @@ group :development do
 end
 gem 'pg'
 gem 'bcrypt'
-
+gem 'annotate'
 gem 'backbone-on-rails'
 gem 'jquery-ui-rails'
 

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: open_walls
+# Table name: open_wall
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer
@@ -10,14 +10,7 @@
 #  updated_at :datetime
 #
 
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  user_id: 1
-  type: 
-  name: MyString
-
-two:
-  user_id: 1
-  type: 
-  name: MyString
+class OpenWall < ActiveRecord::Base
+	belongs_to :users
+  validates_uniqueness_of :name, scope: [:user_id, :is_feed]
+end

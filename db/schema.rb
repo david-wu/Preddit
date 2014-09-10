@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140901174054) do
+ActiveRecord::Schema.define(version: 20140909235944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,12 +25,14 @@ ActiveRecord::Schema.define(version: 20140901174054) do
   end
 
   create_table "open_walls", force: true do |t|
-    t.integer  "user_id"
-    t.string   "type"
-    t.string   "name"
+    t.integer  "user_id",    null: false
+    t.string   "name",       null: false
+    t.boolean  "is_feed"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "open_walls", ["name", "user_id"], name: "index_open_walls_on_name_and_user_id", unique: true, using: :btree
 
   create_table "tiles", force: true do |t|
     t.integer  "user_id"
@@ -47,6 +49,7 @@ ActiveRecord::Schema.define(version: 20140901174054) do
     t.datetime "updated_at"
     t.boolean  "over_18"
     t.boolean  "viewed"
+    t.integer  "num_comments"
   end
 
   create_table "users", force: true do |t|
@@ -58,6 +61,7 @@ ActiveRecord::Schema.define(version: 20140901174054) do
     t.datetime "updated_at"
     t.boolean  "permitNsfw"
     t.boolean  "permitEmail"
+    t.integer  "unviewed_count",  default: 0
   end
 
 end

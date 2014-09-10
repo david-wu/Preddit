@@ -14,12 +14,15 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     this.$otherViews = $('#otherViews');
     this.$allWalls = $('#wall');
     this.$navBar = $('#navBar');
+
     this.subs = {};
     this.feeds = {};
 
-    this.currentUser = new Wreddit.Models.User(JSON.parse(Cookie.get("user")));
+    this.currentUser = new Wreddit.Models.User();
+    this.openWalls = new Wreddit.Collections.OpenWalls();
     this.navBar = new Wreddit.Views.NavBar({
-      user: this.currentUser
+      user: this.currentUser,
+      openWalls: this.openWalls
     });
     this.$navBar.html(this.navBar.render().$el);
   },
@@ -28,32 +31,39 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
   },
   visitSub: function(subName){
     subName = this._formatWallName(subName);
+    this.openWalls.create({
+      name: subName,
+      is_feed: false,
+    });
     if(!this.subs[subName]){
-      this.navBar.appendWall(subName, 'sub');
       this.subs[subName] = new Wreddit.Views.Wall({
         wallName: subName,
         type: 'sub',
-      })
+        display_x: false
+      });
     }
     this._swapWall(this.subs[subName]);
     $('#subreddit-field').focus();
   },
   visitFeed: function(feedName){
-
     feedName = this._formatFeedName(feedName);
+    this.openWalls.create({
+      name: feedName,
+      is_feed: true,
+    });
     if(this.feeds[feedName]){
       this.feeds[feedName].remove();
-    }else{
-      this.navBar.appendWall(feedName, 'feed');
     }
     this.feeds[feedName] = new Wreddit.Views.Wall({
       wallName: feedName,
       type: 'feed',
+      display_x: (this.currentUser.get('username') === feedName)
     })
     this._swapWall(this.feeds[feedName]);
     $('#subreddit-field').focus();
   },
   signUp: function () {
+    var that = this;
     this.newUserView = new Wreddit.Views.SignUp({
       user: this.currentUser
     })
@@ -62,6 +72,7 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $('#username-field').focus();
   },
   signIn: function () {
+    var that = this;
     this.newSessionView = new Wreddit.Views.SignIn({
       user: this.currentUser
     })
@@ -70,7 +81,9 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $('#username-field').focus();
   },
   editSettings: function () {
-    this.newSettingsView = new Wreddit.Views.Settings({})
+    this.newSettingsView = new Wreddit.Views.Settings({
+      user: this.currentUser
+    })
     this._swapView(this.newSettingsView);
     this.newSettingsView.render();
     $('#email-input').focus();
@@ -82,14 +95,10 @@ Wreddit.Routers.Tiles = Backbone.Router.extend({
     $('#subreddit-field').focus();
   },
   signOut: function () {
-    this.currentUser.clear();
-    this.navBar.render();
     this.$allWalls.html('');
     this.subs = {};
     this.feeds = {};
-    Cookie.delete('user')
-    Cookie.delete('subs')
-    Cookie.delete('feeds')
+    this.currentUser.signOut();
     this.navigate('#newSession', {trigger:true});
     $('#username-field').focus();
   },

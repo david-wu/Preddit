@@ -7,24 +7,29 @@ Wreddit.Models.User = Backbone.Model.extend({
       data: this.attributes,
       url: "/api/session",
       dataType: "json"
-      // success: function(res){
-      //   that.set(res)
-      //   console.log(that)
-      // },
-      // error: options.error.bind(this),
     }).done(function(res){
       that.set(res)
-      console.log(that)
     })
   },
+  signOut: function(){
+    var that = this;
+    return $.ajax({
+      url: "api/session",
+      type: 'DELETE'
+    }).done(function(res){
+      that.set(res)
+    })
+  },
+  getCurrentUser: function (cookie, callback){
+    var that = this;
+    return $.ajax({
+      url: "api/users/current",
+      dataType: "json",
+      success: !callback || callback.bind(this),
+      error: !callback || callback.bind(this),
+    }).done(function(res){
+      that.set(res)
+    });
+  }
+
 })
-Wreddit.Models.User.currentUser = function (cookie, callback){
-  $.ajax({
-    type: "POST",
-    data: cookie,
-    url: "api/users/current",
-    dataType: "json",
-    success: callback.bind(this),
-    error: callback.bind(this),
-  })
-}

@@ -1,8 +1,23 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id              :integer          not null, primary key
+#  username        :string(255)
+#  password_digest :string(255)
+#  session_token   :string(255)
+#  email           :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  permitNsfw      :boolean
+#  permitEmail     :boolean
+#
+
 class User < ActiveRecord::Base
     include BCrypt
     validates :username, :password_digest, presence: true
     validates :username, uniqueness: true
-    before_create :ensure_session_token
+    before_create :ensure_session_token, :ensure_viewed_count
     has_many :open_walls
 
     def password
@@ -13,15 +28,16 @@ class User < ActiveRecord::Base
       self.session_token ||= SecureRandom.urlsafe_base64(16)
     end
 
+    def ensure_viewed_count
+      ensure_viewed_count ||= 0
+    end
+
     def password=(new_password)
-      p new_password
       self.password_digest = BCrypt::Password.create(new_password)
     end
 
     def is_password?(password)
-      p password
       bCrypt = BCrypt::Password.new(self.password_digest)
-      p bCrypt.is_password?(password)
       return bCrypt.is_password?(password)
     end
 
@@ -32,7 +48,6 @@ class User < ActiveRecord::Base
 
     def permissions=(permits)
       permits.each do |permit|
-        p (permit+'=').to_sym
         self.send((permit+'=').to_sym, true)
       end
     end

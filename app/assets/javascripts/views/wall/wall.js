@@ -12,6 +12,7 @@ Wreddit.Views.Wall = Backbone.View.extend({
     this.loading = false;
     this.onDom = false;
     this.loadingImageCount = 0;
+    this.display_x = options.display_x;
     this.mason = new Masonry('#wall', {
       itemSelector: '.tile',
       columnWidth: 360,
@@ -37,7 +38,9 @@ Wreddit.Views.Wall = Backbone.View.extend({
     var $tile = $(JST['wall/tile']({
       tile: tile,
       wallName: this.wallName,
+      display_x: this.display_x
     }));
+    // jquery append vs document fragment's append?
     this.$el.append($tile);
 
     // $tile consists of the tile and its modal

@@ -13,6 +13,11 @@ class Api::TilesController < ApplicationController
     end
 
     if @tile.save
+      
+      # clean this up
+      @user.unviewed_count += 1
+      @user.save
+
       render json: { tile: @tile }
     else
       render json: { errors: @tile.errors.full_messages }, status: 422
@@ -20,6 +25,7 @@ class Api::TilesController < ApplicationController
   end
 
   # if correct session_token is passed in, set walls tiles to viewed
+  # should return all tiles if no params sent in
   def index
     @user = User.find_by(username: params[:username])
     @requesting_user = User.find_by(session_token: params[:session_token])
@@ -37,7 +43,7 @@ class Api::TilesController < ApplicationController
   end
 
   def tile_params
-    params.permit('session_token', 'viewed', 'user_id', 'title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
+    params.permit('num_comments','session_token', 'viewed', 'user_id', 'title', 'url', 'author', 'domain', 'imgSrc', 'permalink', 'subreddit', 'over_18')
   end
 
 end

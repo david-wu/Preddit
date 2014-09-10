@@ -13,6 +13,7 @@ Wreddit.Views.SignUp = Backbone.View.extend({
   },
   signUp: function (event){
     var that = this;
+    
     // get and sanitize input
     event.preventDefault();
     var attrs = $(event.target.form).serializeJSON();
@@ -25,11 +26,12 @@ Wreddit.Views.SignUp = Backbone.View.extend({
       return false;
     }
     this.user.set(attrs);
+
     // create user and welcome tile
     this.user.save().done(function(res){
       var tile = new Wreddit.Models.Tile({
         title: "Welcome To Preddit!  Use the Search Bar to open content or find users.  You can click and drag tiles to share them with other users.",
-        user_id: that.id,
+        user_id: that.user.id,
         imgSrc: 'assets/welcome.gif',
         url: '#',
         author: 'dawu',
@@ -39,7 +41,6 @@ Wreddit.Views.SignUp = Backbone.View.extend({
       }, {})
       tile.save()
       Wreddit.router.navigate('#f/'+attrs.user.username, {trigger: true})
-      Cookie.set('user', JSON.stringify(that.user))
     }).fail(function(res){
       res.responseJSON.forEach(function(error){
         that._showErrorMessage(error);

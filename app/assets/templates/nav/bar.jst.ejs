@@ -14,34 +14,11 @@
       <form class="navbar-form navbar-left" role="search">
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <li style="padding-top: 7px">
+        <li class='search-bar-container' style="padding-top: 7px">
           <input id='subreddit-field' type="text" class='form-control' placeholder="Search">
         </li>
 
         <li id='nav-bar-dropdown-menu' class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <span id="current_user_in_nav_bar">
-                <% if(current_user){ %>
-                  <%= current_user %>
-                <%}else{%>
-                  Account
-                <%}%>
-              </span> <b class="caret"></b>
-
-          </a>
-          <ul id="main-nav-dropdown" class="dropdown-menu">
-            <% if(current_user){%>
-              <li><a href="#destroySession">Sign Out</a></li>
-              <li class="divider"></li>
-              <li><a href="#editSettings">Settings</a></li>
-              <li><a href="#viewAbout">About</a></li>
-            <% }else{ %>
-              <li><a href="#newUser">Sign up</a></li>
-              <li><a href="#newSession">Log In</a></li>
-              <li class="divider"></li>
-              <li><a href="#viewAbout">About</a></li>
-            <%}%>
-          </ul>
         </li>
       </ul>
       <ul id="allFeed-links" style="padding-right: 15px" class="nav navbar-nav navbar-right">
