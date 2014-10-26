@@ -11,13 +11,8 @@
   <% if(current_user.get('id')){%>
     <li><a href="#f/<%=current_user.get('username')%>">My Feed</a></li>
     <li><a href="#destroySession">Sign Out</a></li>
-    <li class="divider"></li>
-    <li><a href="#editSettings">Settings</a></li>
-    <li><a href="#viewAbout">About</a></li>
   <% }else{ %>
     <li><a href="#newUser">Sign up</a></li>
     <li><a href="#newSession">Log In</a></li>
-    <li class="divider"></li>
-    <li><a href="#viewAbout">About</a></li>
   <%}%>
 </ul>
